@@ -1,0 +1,13 @@
+-main ApplicationMain 
+-lib openfl
+-lib flixel
+-cp source
+-D tools=1.1.6
+-D FLX_NO_DEBUG
+-D openfl=1.1
+-D web
+-swf-version 11.2
+-swf export/flash/bin/HxKingdom3.swf
+-swf-header 640:480:60:FFFFFF
+-cp export/flash/haxe
+#--remap nme:flash

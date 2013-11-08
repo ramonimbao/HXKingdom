@@ -1,0 +1,17 @@
+-main ApplicationMain 
+-lib openfl
+-lib openfl-native
+-lib hxlibc
+-lib flixel
+-lib flixel-addons
+-cp source
+-D tools=1.1.6
+-D FLX_NO_DEBUG
+-D openfl=1.1
+-D windows
+-D desktop
+-cp export/windows/cpp/haxe
+-cpp export/windows/cpp/obj
+--macro allowPackage("flash")
+--macro keep("Main")
+-D no-compilation
