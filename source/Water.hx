@@ -114,7 +114,12 @@ class Water extends FlxSprite
 		px.fillRect(rect, currentBase);
 		utils.gradientOverlay(px, [0x00000000, 0x66000000], 90, 4);
 		// Flip the screen and copy it to the reflection
+		#if flash
+		px.draw(FlxG.camera.buffer, matrix, transform);
+		#end
+		#if !flash
 		px.draw(FlxG.camera._canvas, matrix, transform);
+		#end
 		
 		// Draw the lights
 		var l:Light;

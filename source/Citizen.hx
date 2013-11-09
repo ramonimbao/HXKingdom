@@ -310,7 +310,7 @@ class Citizen extends FlxSprite
 		guarding = false;
 	}
 	
-	public function pickNewGoal(preset:Float = null):Void
+	public function pickNewGoal(?preset:Float):Void
 	{
 		// TODO !!! Hunters don't target well at night
 		var a:Attention = cast(playstate.fx.recycle(Attention), Attention);

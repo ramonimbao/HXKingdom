@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<app title="HxKingdom3" file="HxKingdom3" main="Main" version="0.0.1" company="HaxeFlixel" />
+	<app title="HxKingdom" file="HxKingdom" main="Main" version="0.0.1" company="HaxeFlixel" />
 	
 	<window width="864" height="480" fps="60" orientation="portrait" resizable="true" if="web" />
 	<window width="864" height="480" fps="60" orientation="landscape" fullscreen="false" hardware="true" vsync="true" unless="web" />
@@ -16,14 +16,152 @@
 	<classpath name="source" />
 	
 	<!--You can use rename="newName" to shorten the paths to the individual subdirectories!-->
-	<assets path="assets" />
+	<assets path="assets" exclude="*.wav" if="flash" />
+	<assets path="assets" exclude="*.svg" if="html5" />
+	<assets path="assets" if="desktop" />
+	<assets path="assets" if="mobile" />
+	
+	<assets path="assets" if="android" >
+		<!-- Your sound embedding code here... -->
+		<!-- Sounds -->
+		<sound path="sound/hit.wav" id="HitSound" />
+		<sound path="sound/hitbig.wav" id="HitbigSound" />
+		<!-- Env sounds -->
+		<sound path="sound/cicada.wav" id="CicadaSound" />
+		<sound path="sound/owls.wav" id="OwlsSound" />
+		<sound path="sound/birds.wav" id="BirdsSound" />
+		<!-- Music -->
+		<sound path="music/night1.wav" id="MusicNight1" />
+		<sound path="music/night2.wav" id="MusicNight2" />
+		<sound path="music/night3.wav" id="MusicNight3" />
+		<sound path="music/night4.wav" id="MusicNight4" />
+		<sound path="music/night5.wav" id="MusicNight5" />
+		<sound path="music/day1.wav" id="MusicDay1" />
+		<sound path="music/day2.wav" id="MusicDay2" />
+		<sound path="music/day3.wav" id="MusicDay3" />
+		<sound path="music/day4.wav" id="MusicDay4" />
+		<sound path="music/day5.wav" id="MusicDay5" />
+		<!-- Citizen -->
+		<sound path="sound/shoot.wav" id="ShootSound" />
+		<sound path="sound/powerup.wav" id="PowerupSound" />
+		<sound path="sound/hitcitizen.wav" id="HitCitizenSound" />
+		<!-- Player -->
+		<sound path="sound/pickup.wav" id="PickupSound" />
+		<sound path="sound/build.wav" id="BuildSound" />
+		<sound path="sound/throw.wav" id="ThrowSound" />
+		<sound path="sound/stolen.wav" id="StolenSound" />
+		<!-- Wall -->
+		<sound path="sound/hitwall.wav" id="HitwallSound" />
+		
+	</assets>
+	
+	<assets path="assets" if="desktop" >
+		<!-- Your sound embedding code here... -->
+		<!-- Sounds -->
+		<sound path="sound/hit.wav" id="HitSound" />
+		<sound path="sound/hitbig.wav" id="HitbigSound" />
+		<!-- Env sounds -->
+		<sound path="sound/cicada.wav" id="CicadaSound" />
+		<sound path="sound/owls.wav" id="OwlsSound" />
+		<sound path="sound/birds.wav" id="BirdsSound" />
+		<!-- Music -->
+		<sound path="music/night1.wav" id="MusicNight1" />
+		<sound path="music/night2.wav" id="MusicNight2" />
+		<sound path="music/night3.wav" id="MusicNight3" />
+		<sound path="music/night4.wav" id="MusicNight4" />
+		<sound path="music/night5.wav" id="MusicNight5" />
+		<sound path="music/day1.wav" id="MusicDay1" />
+		<sound path="music/day2.wav" id="MusicDay2" />
+		<sound path="music/day3.wav" id="MusicDay3" />
+		<sound path="music/day4.wav" id="MusicDay4" />
+		<sound path="music/day5.wav" id="MusicDay5" />
+		<!-- Citizen -->
+		<sound path="sound/shoot.wav" id="ShootSound" />
+		<sound path="sound/powerup.wav" id="PowerupSound" />
+		<sound path="sound/hitcitizen.wav" id="HitCitizenSound" />
+		<!-- Player -->
+		<sound path="sound/pickup.wav" id="PickupSound" />
+		<sound path="sound/build.wav" id="BuildSound" />
+		<sound path="sound/throw.wav" id="ThrowSound" />
+		<sound path="sound/stolen.wav" id="StolenSound" />
+		<!-- Wall -->
+		<sound path="sound/hitwall.wav" id="HitwallSound" />
+		
+	</assets>
+	
+	<assets path="assets" if="flash" >
+		<!-- Your sound embedding code here... -->
+		<!-- Sounds -->
+		<sound path="sound/hit.mp3" id="HitSound" />
+		<sound path="sound/hitbig.mp3" id="HitbigSound" />
+		<!-- Env sounds -->
+		<sound path="sound/cicada.mp3" id="CicadaSound" />
+		<sound path="sound/owls.mp3" id="OwlsSound" />
+		<sound path="sound/birds.mp3" id="BirdsSound" />
+		<!-- Music -->
+		<sound path="music/night1.mp3" id="MusicNight1" />
+		<sound path="music/night2.mp3" id="MusicNight2" />
+		<sound path="music/night3.mp3" id="MusicNight3" />
+		<sound path="music/night4.mp3" id="MusicNight4" />
+		<sound path="music/night5.mp3" id="MusicNight5" />
+		<sound path="music/day1.mp3" id="MusicDay1" />
+		<sound path="music/day2.mp3" id="MusicDay2" />
+		<sound path="music/day3.mp3" id="MusicDay3" />
+		<sound path="music/day4.mp3" id="MusicDay4" />
+		<sound path="music/day5.mp3" id="MusicDay5" />
+		<!-- Citizen -->
+		<sound path="sound/shoot.mp3" id="ShootSound" />
+		<sound path="sound/powerup.mp3" id="PowerupSound" />
+		<sound path="sound/hitcitizen.mp3" id="HitCitizenSound" />
+		<!-- Player -->
+		<sound path="sound/pickup.mp3" id="PickupSound" />
+		<sound path="sound/build.mp3" id="BuildSound" />
+		<sound path="sound/throw.mp3" id="ThrowSound" />
+		<sound path="sound/stolen.mp3" id="StolenSound" />
+		<!-- Wall -->
+		<sound path="sound/hitwall.mp3" id="HitwallSound" />
+		
+	</assets>
+	
+	<assets path="assets" if="html5" >	
+		<!-- Your sound embedding code here... -->
+		<!-- Sounds -->
+		<sound path="sound/hit.mp3" id="HitSound" />
+		<sound path="sound/hitbig.mp3" id="HitbigSound" />
+		<!-- Env sounds -->
+		<sound path="sound/cicada.mp3" id="CicadaSound" />
+		<sound path="sound/owls.mp3" id="OwlsSound" />
+		<sound path="sound/birds.mp3" id="BirdsSound" />
+		<!-- Music -->
+		<sound path="music/night1.mp3" id="MusicNight1" />
+		<sound path="music/night2.mp3" id="MusicNight2" />
+		<sound path="music/night3.mp3" id="MusicNight3" />
+		<sound path="music/night4.mp3" id="MusicNight4" />
+		<sound path="music/night5.mp3" id="MusicNight5" />
+		<sound path="music/day1.mp3" id="MusicDay1" />
+		<sound path="music/day2.mp3" id="MusicDay2" />
+		<sound path="music/day3.mp3" id="MusicDay3" />
+		<sound path="music/day4.mp3" id="MusicDay4" />
+		<sound path="music/day5.mp3" id="MusicDay5" />
+		<!-- Citizen -->
+		<sound path="sound/shoot.mp3" id="ShootSound" />
+		<sound path="sound/powerup.mp3" id="PowerupSound" />
+		<sound path="sound/hitcitizen.mp3" id="HitCitizenSound" />
+		<!-- Player -->
+		<sound path="sound/pickup.mp3" id="PickupSound" />
+		<sound path="sound/build.mp3" id="BuildSound" />
+		<sound path="sound/throw.mp3" id="ThrowSound" />
+		<sound path="sound/stolen.mp3" id="StolenSound" />
+		<!-- Wall -->
+		<sound path="sound/hitwall.mp3" id="HitwallSound" />
+		
+	</assets>
 	
 	<haxelib name="openfl" />
 	<haxelib name="flixel"/>
-	<haxelib name="flixel-addons" />
 	
 	<!--In case you want to use the addons package-->
-	<!--<haxelib name="flixel-addons" />-->
+	<haxelib name="flixel-addons" />
 	
 	<!--In case you want to use the ui package-->
 	<!--<haxelib name="flixel-ui"/>-->

@@ -1,0 +1,14 @@
+MISSING:
+- ExplodingText.hx
+- Farmland.hx
+- Firefly.hx
+- GameOverState.hx
+- Reed.hx
+- Torch.hx
+- Treeline.hx
+
+OTHER NOTES:
+- the buildLevel() function times out and throws an error
+- the RegExp stuff also throws errors
+- consider hardcoding the level building
+- consider changing the way loading and saving is handled (the flixel way?)

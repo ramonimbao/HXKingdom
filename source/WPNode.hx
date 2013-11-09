@@ -22,6 +22,8 @@ class WPNode
 	public var arr:Array<Dynamic>;
 	
 	public function new(saturation_:Float, darkness_:Float, sky_:UInt, haze_:UInt, sunTint_:UInt, fog_:Float, contrast_:Float, horizon_:UInt, ambient_:UInt, timeOfDay_:Float, wind_:Float, darknessColor_:UInt) {
+		arr = [];
+		
 		saturation = saturation_;
 		darkness = darkness_;
 		sky = sky_;

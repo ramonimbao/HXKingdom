@@ -32,10 +32,10 @@ class MochiDigits
 		return Std.parseFloat(this.toString());
 	}
 	
-	function set_value(v:Float):Float
+	function set_value(?v:Float):Float
 	{
 		setValue(v);
-		return null;
+		return 0;
 	}
 	
 	public function addValue(inc:Float):Void
@@ -48,7 +48,7 @@ class MochiDigits
 		var s:String = Std.string(digit);
 		Fragment = s.charCodeAt(index++) ^ Std.int(Encoder);
 		
-		if (index < s.length)
+		if (Std.int(index) < s.length)
 		{
 			Sibling = new MochiDigits(digit, index);
 		}

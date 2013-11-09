@@ -18,6 +18,7 @@ import flash.events.Event;
 import flash.filters.BlurFilter;
 import flixel.addons.display.FlxBackdrop;
 import flixel.util.FlxRect;
+import flash.geom.Rectangle;
 
 import flash.xml.XMLList;
 import openfl.Assets;
@@ -438,7 +439,7 @@ class PlayState extends FlxState
 	{
 		// Collisions
 		
-		if (restoreProgress)
+		if (restoreProgress != "")
 		{
 			setProgress(restoreProgress);
 			restoreProgress = null;
@@ -466,7 +467,7 @@ class PlayState extends FlxState
 		if (!(CHEATS && untouchable))
 		{
 			FlxG.overlap(trolls, player, this.trollHit);
-			FlxG.overlaps(trollsNoCollide, player, this.trollHit);
+			FlxG.overlap(trollsNoCollide, player, this.trollHit);
 		}
 		// Update weather
 		weather.update();
@@ -540,7 +541,7 @@ class PlayState extends FlxState
 		// Camera follow timeout
 		if (cameraTarget.target != player)
 		{
-			if (cameraTarget <= 0)
+			if (cameraTimeout <= 0)
 			{
 				// Reset the cameratarget.
 				cameraTarget.target = player;
@@ -558,7 +559,7 @@ class PlayState extends FlxState
 			reachedVillage = true;
 			if (beggars.length > 0)
 			{
-				panTo(beggars.members[0], 5.0);
+				panTo(cast(beggars.members[0], FlxSprite), 5.0);
 				showText("Throw some coins [DOWN] near them.");
 			}
 		}
@@ -567,21 +568,21 @@ class PlayState extends FlxState
 		{
 			buyBowAdvice = true;
 			showText("Buy them bows to defend and hunt for you.");
-			panTo(shops.members[1], 7.5);
+			panTo(cast(shops.members[1], FlxSprite), 7.5);
 		}
 		
 		if (buyBowAdvice && !buyScytheAdvice && cameraTarget.target == player)
 		{
 			buyScytheAdvice = true;
 			showText("Buy them scythes to build and farm for you.");
-			panTo(shops.members[0], 7.5);
+			panTo(cast(shops.members[0], FlxSprite), 7.5);
 		}
 		
 		if (boughtItem && !expandedKingdomAdvice && characters.length >= 4 && weather.timeOfDay > 0.3 && weather.timeOfDay < 0.6)
 		{
 			expandedKingdomAdvice = true;
 			showText("Expand your kingdom by building a wall here.");
-			panTo(walls.members[1], 5.0, -12);
+			panTo(cast(walls.members[1], FlxSprite), 5.0, -12);
 		}
 		
 		this.updateEnvironmentSounds();
@@ -596,7 +597,7 @@ class PlayState extends FlxState
 		
 		if (FlxG.keyboard.justPressed("S"))
 		{
-			if (FlxG.stage.displayState = StageDisplayState.NORMAL)
+			if (FlxG.stage.displayState == StageDisplayState.NORMAL)
 			{
 				FlxG.stage.displayState = StageDisplayState.FULL_SCREEN;
 			}
@@ -628,12 +629,13 @@ class PlayState extends FlxState
 		spawnTrolls(2);
 		if (player.x < GAME_WIDTH / 2)
 		{
-			panTo(trolls.members[0]);
+			panTo(cast(trolls.members[0], FlxSprite));
 		}
 		else
 		{
-			panTo(trolls.members[1]);
+			panTo(cast(trolls.members[1], FlxSprite));
 		}
+		showText("They will noodle your stuff away.");
 		showText("They will noodle your stuff away.");
 	}
 	
@@ -916,7 +918,7 @@ class PlayState extends FlxState
 							Std.parseInt(wallStages_r.matched(5)),
 							Std.parseInt(wallStages_r.matched(6))
 							];
-		var castleStage:Int = Std.parseInt(castleStage_r.matched(1);
+		var castleStage:Int = Std.parseInt(castleStage_r.matched(1));
 		var shopSupply:Array<Int> = [
 							Std.parseInt(shopSupply_r.matched(1)),
 							Std.parseInt(shopSupply_r.matched(2))
@@ -925,7 +927,7 @@ class PlayState extends FlxState
 		
 		while (beggars.countLiving() < numBeggars)
 		{
-			beggars.add(new Citizen((kingdomRight + kingdomLeft) / 2, 0);
+			beggars.add(new Citizen((kingdomRight + kingdomLeft) / 2, 0));
 		}
 		
 		player.x = playerX;
@@ -959,7 +961,7 @@ class PlayState extends FlxState
 		
 		for (i in 0...walls.length)
 		{
-			cast(walls.members[i], Wall).buildTo(wallStages[i + 1]), true);
+			cast(walls.members[i], Wall).buildTo(wallStages[i + 1], true);
 		}
 		
 		cast(shops.members[0], Shop).setSupply(shopSupply[0]);
@@ -984,7 +986,8 @@ class PlayState extends FlxState
 		
 		if (retreatDelay <= 0)
 		{
-			trollsToSpawn.splice(0);
+			//trollsToSpawn.splice(0);
+			trollsToSpawn.splice(0, trolls.length);
 			trolls.callAll("retreat");
 			trollsNoCollide.callAll("retreat");
 		}
@@ -998,7 +1001,7 @@ class PlayState extends FlxState
 		}
 		else if (Std.is(char, Citizen))
 		{
-			cast(char, Citizen).pickup(Coin);
+			cast(char, Citizen).pickup(coin);
 		}
 		else if (Std.is(char, Troll))
 		{
@@ -1006,5 +1009,116 @@ class PlayState extends FlxState
 		}
 	}
 	
-	public function giveTaxes(char:FlxObject, player:
+	public function giveTaxes(char:FlxObject, player:FlxObject):Void
+	{
+		if (char != player)
+		{
+			cast(char, Citizen).giveTaxes(cast(player, Player));
+		}
+	}
+	
+	public function trollWall(troll:FlxObject, wall:FlxObject):Void
+	{
+		FlxObject.separate(troll, wall);
+		wall.hurt(cast(troll, Troll).big ? 10 : 5);
+	}
+	
+	public function trollShot(arrow:FlxObject, troll:Troll):Void
+	{
+		if (troll.alive && arrow.exists)
+		{
+			FlxG.sound.play("HitbigSound").proximity(arrow.x, arrow.y, player, FlxG.width);
+			arrow.kill();
+			cast(troll, Troll).getShot();
+		}
+	}
+	
+	public function bunnyShot(arrow:FlxObject, bunny:FlxObject):Void
+	{
+		if (bunny.alive && arrow.exists)
+		{
+			FlxG.sound.play("HitSound").proximity(arrow.x, arrow.y, player, FlxG.width);
+			arrow.kill();
+			cast(bunny, Bunny).getShot(cast(arrow, Arrow));
+		}
+	}
+	
+	public function trollHit(troll:FlxObject, char:FlxObject):Void
+	{
+		if (Std.is(char, Citizen))
+		{
+			cast(char, Citizen).hitByTroll(cast(troll, Troll));
+		}
+		if (char == player)
+		{
+			cast(char, Player).hitByTroll(cast(troll, Troll));
+		}
+	}
+	
+	public function crownStolen():Void
+	{
+		gameOver = true;
+		phasesPaused = true;
+		trollRetreat(0);
+		FlxG.mouse.show();
+		showText("No crown, no king. Game over.");
+		showText("Click to continue.");
+		//showText("Wait to enter highscore.");
+		//showText("Click to continue.");
+		//showText("Wait to enter highscore.");
+		//
+		// No highscores because Haxe.
+		FlxG.cameras.fade(0, 20, false, endGame);
+	}
+	
+	public function endGame():Void
+	{
+		FlxG.switchState(new GameOverState(Std.int(day.value - 1)));
+	}
+	
+	//=== RENDERING ===//
+	override public function draw():Void
+	{
+		darkness.dirty = true;
+		darkness.pixels.fillRect(new Rectangle(0, 0, darkness.width, darkness.height), weather.darknessColor);
+		
+		super.draw();
+		#if flash
+		weather.ambientTransform.applyFilter(FlxG.camera.buffer);
+		#end
+	}
+	
+	public function showCoins():Void
+	{
+		var c:Int = cast(player, Player).coins;
+		sack.show(c);
+	}
+	
+	public function showText(t:String = null):Void
+	{
+		if (t != null)
+		{
+			textQueue = textQueue.concat(t.split("\n"));
+		}
+		if (textQueue.length > 0 && textTimeout <= 0)
+		{
+			text.text = textQueue.shift();
+			text.visible = true;
+			textTimeout = Math.max(TEXT_MIN_TIME, TEXT_READ_SPEED * text.text.length);
+		}
+	}
+	
+	public function showCenterText(t:String):Void
+	{
+		centerText.text = t;
+		centerText.visible = true;
+		centerText.alpha = 0.999;
+	}
+	
+	public function panTo(o:FlxSprite, duration:Float = 8.0, lead:Float = 0):Void
+	{
+		cameraTimeout = duration;
+		cameraTarget.target = o;
+		cameraTarget.lead = lead;
+	}
 }
