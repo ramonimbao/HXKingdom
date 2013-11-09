@@ -2,7 +2,6 @@ MISSING:
 - ExplodingText.hx
 - Farmland.hx
 - Firefly.hx
-- GameOverState.hx
 - Reed.hx
 - Torch.hx
 - Treeline.hx
