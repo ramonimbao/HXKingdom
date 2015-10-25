@@ -10,9 +10,9 @@ import flixel.util.FlxPoint;
 class Fog extends FlxGroup
 {
 	private var FogImg:FlxSprite;
-	
+
 	public static inline var MAXFOG:Int = 5;
-	
+
 	private var weather:Weather;
 	private var weatherChanged:Float;
 	private var _fg:FlxSprite;
@@ -21,15 +21,15 @@ class Fog extends FlxGroup
 	public function new(weather:Weather)
 	{
 		_point = new FlxPoint();
-		
+
 		weatherChanged = -1;
-		
+
 		super(MAXFOG);
 		this.weather = weather;
-		
+
 		for (i in 0...MAXFOG)
 		{
-			_fg = new FlxSprite(0, 0).loadGraphic("assets/gfx/fog.png", true, true, 256, 96);
+			_fg = new FlxSprite(0, 0).loadGraphic("assets/gfx/fog.png", true, 256, 96);
 			_fg.scrollFactor.y = 1.2;
 			_fg.scrollFactor.x = (FlxRandom.float() < 0.5) ? 1.5 : 2.5;
 			_fg.facing = (FlxRandom.float() < 0.5) ? FlxObject.LEFT : FlxObject.RIGHT;
@@ -38,7 +38,7 @@ class Fog extends FlxGroup
 			add(_fg);
 		}
 	}
-	
+
 	override public function update():Void
 	{
 		for (i in 0...members.length)
@@ -57,7 +57,7 @@ class Fog extends FlxGroup
 				}
 			}
 		}
-		
+
 		if (weather.changed > weatherChanged)
 		{
 			// TODO: Does this run every frame?
@@ -82,5 +82,5 @@ class Fog extends FlxGroup
 		}
 		super.update();
 	}
-	
+
 }

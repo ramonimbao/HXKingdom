@@ -14,19 +14,19 @@ class Wall extends FlxSprite implements Workable implements Buildable
 	public var HURT_COOLDOWN:Float;
 	public var WORK_BUILD_HEIGHT:Int;
 	public var WORK_HEAL_AMOUNT:Int;
-	
+
 	private var playstate:PlayState;
 	public var scaffold:Scaffold;
-	
+
 	public var building:Bool;
 	public var heightToBuild:Int;
 	public var baseY:Float;
 	public var stage:Int;
 	private var t:Float;
-	
-	private var utils:Utils;
 
-	public function new(X:Float, Y:Float) 
+	private var utils:Utils = new Utils();
+
+	public function new(X:Float, Y:Float)
 	{
 		HURT_COOLDOWN = 1;
 		WORK_BUILD_HEIGHT = 10;
@@ -35,13 +35,13 @@ class Wall extends FlxSprite implements Workable implements Buildable
 		building = false;
 		heightToBuild = 0;
 		stage = 0;
-		
+
 		baseY = Y;
 		super(X, Y);
 		immovable = true;
 		moves = false;
 		solid = false;
-		loadGraphic("assets/gfx/wall.png", true, true, 32, 64);
+		loadGraphic("assets/gfx/wall.png", true, 32, 64);
 		animation.add("grow", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 1);
 		if (X > 1920) {
 			facing = FlxObject.LEFT;
@@ -51,16 +51,16 @@ class Wall extends FlxSprite implements Workable implements Buildable
 		health = HEALTH[stage];
 		updateAppearance();
 		playstate = cast(FlxG.state, PlayState);
-		
+
 		HEIGHT = [11, 38, 46, 54, 59];
 		HEALTH = [2, 38, 50, 60, 75];
 	}
-	
+
 	public function build():Void
 	{
 		buildTo(stage + 1);
 	}
-	
+
 	public function buildTo(s:Int, instant:Bool = false):Void
 	{
 		if (!instant && s < stage) return;
@@ -82,7 +82,7 @@ class Wall extends FlxSprite implements Workable implements Buildable
 			work(null);
 		}*/
 	}
-	
+
 	public function work(citizen:Citizen = null):Void
 	{
 		if (heightToBuild > 0)
@@ -107,7 +107,7 @@ class Wall extends FlxSprite implements Workable implements Buildable
 			}
 		}
 	}
-	
+
 	override public function hurt(Damage:Float):Void
 	{
 		if (t > HURT_COOLDOWN)
@@ -125,17 +125,17 @@ class Wall extends FlxSprite implements Workable implements Buildable
 		}
 		updateAppearance();
 	}
-	
+
 	public function needsWork():Bool
 	{
 		return (building || health < HEALTH[stage]);
 	}
-	
+
 	public function canBuild():Bool
 	{
 		return (!building && stage < 4);
 	}
-	
+
 	private function updateAppearance():Void
 	{
 		height = HEIGHT[stage] - heightToBuild;
@@ -150,7 +150,7 @@ class Wall extends FlxSprite implements Workable implements Buildable
 			animation.frameIndex = stage;
 		}
 	}
-	
+
 	override public function update():Void
 	{
 		t += FlxG.elapsed;
@@ -166,5 +166,5 @@ class Wall extends FlxSprite implements Workable implements Buildable
 			}
 		}
 	}
-	
+
 }

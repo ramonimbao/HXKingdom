@@ -8,17 +8,17 @@ class Coinsack extends FlxSprite
 
 	public static inline var FADE_TIME:Float = 20;
 	public var t:Float;
-	
+
 	public function new(X:Float = 0, Y:Float = 0)
 	{
 		super(X, Y);
-		
-		loadGraphic("assets/gfx/sack.png", true, false, 16, 16);
+
+		loadGraphic("assets/gfx/sack.png", true, 16, 16);
 		scrollFactor.x = scrollFactor.y = 0;
 		animation.add('blink', [8, 0, 8, 0, 8, 0, 8, 0, 8, 0], 5, false);
-		
+
 	}
-	
+
 	public function show(c:Int):Void
 	{
 		if (c == 0)
@@ -55,7 +55,7 @@ class Coinsack extends FlxSprite
 		}
 		t = 0;
 	}
-	
+
 	override public function update():Void
 	{
 		t += FlxG.elapsed;

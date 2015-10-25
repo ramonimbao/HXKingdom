@@ -12,15 +12,15 @@ class Bunny extends FlxSprite
 {
 	public static inline var DECAY_TIME:Float = 5;
 	public static inline var TURN_TIME:Float = 1;
-	
+
 	private var t:Float;
-	
-	public function new(X:Float, Y:Float) 
+
+	public function new(X:Float, Y:Float)
 	{
 		t = 0;
-		
+
 		super(X, Y);
-		loadGraphic("assets/gfx/bunny.png", true, true, 16, 16);
+		loadGraphic("assets/gfx/bunny.png", true, 16, 16);
 		offset.y = 4;
 		height = 12;
 		maxVelocity.y = 100;
@@ -31,16 +31,16 @@ class Bunny extends FlxSprite
 		animation.add("dead", [11], 10, true);
 		y = cast(FlxG.state, PlayState).groundHeight - 12;
 	}
-	
+
 	public function getShot(arrow:Arrow):Void
 	{
 		animation.play("dead");
 		alive = false;
 		velocity.x = 0;
 		t = 0;
-		cast(cast(FlxG.state, PlayState).coins.recycle(Coin), Coin).drop(this, arrow.shooter);		
+		cast(cast(FlxG.state, PlayState).coins.recycle(Coin), Coin).drop(this, arrow.shooter);
 	}
-	
+
 	override public function update():Void
 	{
 		// Check for movement input
@@ -70,7 +70,7 @@ class Bunny extends FlxSprite
 				acceleration.x = maxVelocity.x * 4;
 				animation.play("walk");
 			}
-			
+
 			super.update();
 		}
 		else
@@ -82,5 +82,5 @@ class Bunny extends FlxSprite
 			}
 		}
 	}
-	
+
 }

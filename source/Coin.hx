@@ -17,16 +17,16 @@ class Coin extends FlxParticle
 	public var owner:FlxObject;
 	public var justThrown:Bool;
 	public var called:Bool;
-	
-	public function new() 
+
+	public function new()
 	{
 		owner = null;
 		justThrown = false;
 		called = false;
-		
+
 		super();
-		
-		loadGraphic("assets/gfx/coin.png", true, false, 10, 10);
+
+		loadGraphic("assets/gfx/coin.png", false, 10, 10);
 		maxVelocity.x = 20;
 		maxVelocity.y = 275;
 		acceleration.y = 900;
@@ -34,7 +34,7 @@ class Coin extends FlxParticle
 		animation.play("spin");
 		elasticity = 0.5;
 	}
-	
+
 	public function drop(from:FlxSprite, owner:FlxObject = null, far:Bool = false):Coin
 	{
 		reset(from.x + from.width / 2 - 5, Math.max(40, from.y - 10));
@@ -57,7 +57,7 @@ class Coin extends FlxParticle
 		}
 		return this;
 	}
-	
+
 	override public function update():Void
 	{
 		if (!called && lifespan <= TOTAL_LIFESPAN - OWNER_LIFESPAN / 2)

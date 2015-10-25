@@ -9,56 +9,58 @@ class Light extends FlxSprite
 {
 	private var CampfireImg:FlxSprite;
 	private var TorchImg:FlxSprite;
-	
+
 	private var LightMidImg:FlxSprite;
 	private var LightLargeImg:FlxSprite;
 	private var LightReflectSmallImg:FlxSprite;
 	private var LightReflectWideImg:FlxSprite;
-	
+
 	public var beam:FlxSprite;
 	public var reflected:FlxSprite;
 	public var darkness:FlxSprite;
-	
+
 	public var burning:Bool;
-	
+
 	public var playstate:PlayState;
 	public var weather:Weather;
 
 	public function new(X:Float, Y:Float)
 	{
+		beam = new FlxSprite();
+		reflected = new FlxSprite();
 		CampfireImg = new FlxSprite();
 		TorchImg = new FlxSprite();
-		
+
 		LightMidImg = new FlxSprite();
 		LightLargeImg = new FlxSprite();
 		LightReflectSmallImg = new FlxSprite();
 		LightReflectWideImg = new FlxSprite();
-		
+
 		CampfireImg.loadGraphic("assets/gfx/campfire.png");
 		TorchImg.loadGraphic("assets/gfx/torch.png");
-		
+
 		LightMidImg.loadGraphic("assets/gfx/light_mid.png");
 		LightLargeImg.loadGraphic("assets/gfx/light_large.png");
 		LightReflectSmallImg.loadGraphic("assets/gfx/light_reflect_small.png");
 		LightReflectWideImg.loadGraphic("assets/gfx/light_reflect_wide.png");
-		
+
 		super(X, Y);
 		this.playstate = cast(FlxG.state, PlayState);
 		this.darkness = this.playstate.darkness;
 		this.weather = this.playstate.weather;
 	}
-	
+
 	public function setLight():Void
 	{
 		beam.blend = BlendMode.SCREEN;
 	}
-	
+
 	override public function update():Void
 	{
 		getScreenXY(_point);
 		burning = ( -128 < _point.x && _point.x < FlxG.width + 128);
 	}
-	
+
 	override public function draw():Void
 	{
 		if (burning)
@@ -68,7 +70,7 @@ class Light extends FlxSprite
 		}
 		super.draw();
 	}
-	
+
 	public function dim(animName:String, frameNumber:UInt, frameIndex:UInt):Void
 	{
 		if (burning)
@@ -81,5 +83,5 @@ class Light extends FlxSprite
 			beam.drawFrame(true);
 		}
 	}
-	
+
 }

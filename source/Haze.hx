@@ -7,17 +7,17 @@ class Haze extends FlxSprite
 {
 	private var weather:Weather;
 	private var weatherChanged:Float = -1;
-	
-	public static var utils:Utils;
 
-	public function new(X:Float, Y:Float, weather:Weather) 
+	public static var utils:Utils = new Utils();
+
+	public function new(X:Float, Y:Float, weather:Weather)
 	{
 		super(X, Y);
 		this.weather = weather;
 		makeGraphic(FlxG.width, FlxG.height, 0x00000000);
 		scrollFactor.x = 0;
 	}
-	
+
 	override public function draw():Void
 	{
 		if (weather.changed > weatherChanged)
@@ -29,5 +29,5 @@ class Haze extends FlxSprite
 		}
 		super.draw();
 	}
-	
+
 }

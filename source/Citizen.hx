@@ -14,18 +14,18 @@ class Citizen extends FlxSprite
 {
 
 	public static var shootSound:FlxSound;
-	
+
 	public static inline var BASE_COLOR:UInt = 0xFF567271;
 	public static inline var BASE_SHADE:UInt = 0xFF394B4A;
 	public static inline var BASE_SKIN:UInt  = 0xFFEDBEBF;
 	public static inline var BASE_DARK:UInt  = 0xFFBD9898;
 	public static inline var BASE_EYES:UInt  = 0xFFA18383;
-	
+
 	public static inline var BEGGAR:Int = 0;
 	public static inline var POOR:Int	= 1;
 	public static inline var FARMER:Int = 2;
 	public static inline var HUNTER:Int = 3;
-	
+
 	// Behaviours
 	public static inline var IDLE:Int		 = 0;
 	public static inline var SHOOT:Int		 = 1;
@@ -34,7 +34,7 @@ class Citizen extends FlxSprite
 	public static inline var GIVE:Int 		 = 4;
 	public static inline var JUST_HACKED:Int = 5;
 	public static inline var COWER:Int 		 = 6;
-	
+
 	// Behaviour times
 	public static inline var SHOOT_COOLDOWN_GUARD:Float	= 1.4;
 	public static inline var SHOOT_COOLDOWN:Float		= 2.0;
@@ -44,11 +44,11 @@ class Citizen extends FlxSprite
 	public static inline var SHOVEL_GOAL_DIST:Float		= 600;
 	public static inline var GIVE_COOLDOWN:Float		= 10.0;
 	public static inline var COWER_COOLDOWN:Float		= 5.0;
-	
+
 	// Other consts
 	public static inline var HUNTER_BORDER_RANGE:Float = 256;
 	public static inline var MAX_HUNGRY:Float = 5;
-	
+
 	// Variables
 	public var occupation:Int;
 	public var action:Int;
@@ -63,12 +63,12 @@ class Citizen extends FlxSprite
 	public var target:FlxObject;
 	public var guardLeftBorder:Bool;
 	public var hungry:Int = 0;
-	
+
 	public var playstate:PlayState;
 	public var castle:Castle;
-	private var utils:Utils;
-	
-	public function new(X:Float, Y:Float) 
+	private var utils:Utils = new Utils();
+
+	public function new(X:Float, Y:Float)
 	{
 		occupation = BEGGAR;
 		action = IDLE;
@@ -77,8 +77,8 @@ class Citizen extends FlxSprite
 		coins = 0;
 		giveCooldown = 0;
 		shovelCooldown = 0;
-		
-		
+
+
 		super(X, Y);
 		goal = FlxG.worldBounds.width / 2;
 		drag.x = 500;
@@ -86,15 +86,15 @@ class Citizen extends FlxSprite
 		myColor = utils.HSVtoRGB(FlxRandom.float() * 360, 0.1 + FlxRandom.float() * 0.2, 0.6);
 		var d:Float = Math.random() * 20;
 		skin = utils.HSVtoRGB(d, 0.19 + (d / 100), 0.97 - (d / 33));
-		
+
 		playstate = cast(FlxG.state, PlayState);
 		castle = playstate.castle;
 		animation.callback = this.animationFrame;
 		morph(BEGGAR);
-		
+
 		shootSound = FlxG.sound.load("ShootSound");
 	}
-	
+
 	public function morph(occ:Int):Citizen
 	{
 		action = IDLE;
@@ -110,7 +110,7 @@ class Citizen extends FlxSprite
 				{
 					playstate.beggars.add(playstate.characters.remove(this, true));
 				}
-				loadGraphic("assets/gfx/beggar.png", true, true, 32, 32, true);
+				loadGraphic("assets/gfx/beggar.png", true, 32, 32, true);
 				animation.add("walk", [0, 1, 2, 3, 4, 5], 5, true);
 				animation.add("idle", [7, 8, 7, 8, 7, 6], 2, true);
 				animation.add("cower", [9, 10], 2, false);
@@ -121,7 +121,7 @@ class Citizen extends FlxSprite
 				{
 					playstate.characters.add(playstate.beggars.remove(this, true));
 				}
-				loadGraphic("assets/gfx/citizen.png", true, true, 32, 32, true);
+				loadGraphic("assets/gfx/citizen.png", true, 32, 32, true);
 				utils.replaceColor(pixels, BASE_COLOR, myColor);
 				utils.replaceColor(pixels, BASE_SHADE, utils.interpolateColor(myColor, 0xFF000000, 0.2));
 				maxVelocity.x = 17;
@@ -136,7 +136,7 @@ class Citizen extends FlxSprite
 				{
 					myColor = utils.HSVtoRGB(0 + FlxRandom.float() * 20, 0.2 + FlxRandom.float() * 0.3, 0.7);
 				}
-				loadGraphic("assets/gfx/hunter.png", true, true, 32, 32, true);
+				loadGraphic("assets/gfx/hunter.png", true, 32, 32, true);
 				utils.replaceColor(pixels, BASE_COLOR, myColor);
 				utils.replaceColor(pixels, BASE_SHADE, utils.interpolateColor(myColor, 0xFF000000, 0.2));
 				maxVelocity.x = 18;
@@ -145,7 +145,7 @@ class Citizen extends FlxSprite
 				animation.add("shoot", [9, 10, 0], 6, false);
 				animation.add("give", [11, 12, 13], 15, false);
 			case FARMER:
-				loadGraphic("assets/gfx/farmer.png", true, true, 32, 32, true);
+				loadGraphic("assets/gfx/farmer.png", true, 32, 32, true);
 				utils.replaceColor(pixels, BASE_COLOR, myColor);
 				utils.replaceColor(pixels, BASE_SHADE, utils.interpolateColor(myColor, 0xFF000000, 0.2));
 				maxVelocity.x = 21 + Math.random() * 3;
@@ -155,7 +155,7 @@ class Citizen extends FlxSprite
 				animation.add("give", [11, 12, 13], 15, false);
 				animation.add("hack", [14], 15, false);
 		}
-		
+
 		utils.replaceColor(pixels, BASE_SKIN, skin);
 		utils.replaceColor(pixels, BASE_DARK, utils.interpolateColor(skin, 0xFF000000, 0.2));
 		utils.replaceColor(pixels, BASE_EYES, utils.interpolateColor(skin, 0xFF000000, 0.5));
@@ -168,7 +168,7 @@ class Citizen extends FlxSprite
 		pickNewGoal();
 		return this;
 	}
-	
+
 	public function pickup(coin:FlxObject):Void
 	{
 		if (!coin.alive) return;
@@ -176,7 +176,7 @@ class Citizen extends FlxSprite
 		// Return if the coin doesn't belong to me.
 		if (c.owner != null && c.owner != this) return;
 		c.kill();
-		
+
 		var s:Sparkle = cast(cast(FlxG.state, PlayState).fx.recycle(Sparkle), Sparkle);
 		s.reset(x - 4, y + 8);
 		if (occupation == BEGGAR)
@@ -187,7 +187,7 @@ class Citizen extends FlxSprite
 		}
 		coins++;
 	}
-	
+
 	public function giveTaxes(p:Player):Void
 	{
 		if (occupation == HUNTER || occupation == FARMER)
@@ -202,7 +202,7 @@ class Citizen extends FlxSprite
 			}
 		}
 	}
-	
+
 	public function hitByTroll(troll:Troll):Void
 	{
 		// Farmers can defend.
@@ -233,7 +233,7 @@ class Citizen extends FlxSprite
 			animation.play("cower", true);
 		}
 	}
-	
+
 	public function checkShootable(group:FlxGroup):Void
 	{
 		var c:FlxObject;
@@ -255,7 +255,7 @@ class Citizen extends FlxSprite
 			}
 		}
 	}
-	
+
 	public function checkWork(group:FlxGroup):Void
 	{
 		var c:FlxObject;
@@ -278,7 +278,7 @@ class Citizen extends FlxSprite
 			}
 		}
 	}
-	
+
 	public function checkGuard():Void
 	{
 		if (action == IDLE && castle.archer_positions.length > 0)
@@ -301,7 +301,7 @@ class Citizen extends FlxSprite
 			}
 		}
 	}
-	
+
 	public function leaveGuard():Void
 	{
 		castle.archer_positions.push(new FlxPoint(x, y));
@@ -309,7 +309,7 @@ class Citizen extends FlxSprite
 		action = IDLE;
 		guarding = false;
 	}
-	
+
 	public function pickNewGoal(?preset:Float):Void
 	{
 		// TODO !!! Hunters don't target well at night
@@ -352,9 +352,9 @@ class Citizen extends FlxSprite
 				return;
 			}
 		}
-		
+
 		var l:Float, r:Float;
-		
+
 		if (occupation == HUNTER)
 		{
 			// Hunters gather around borders at night
@@ -408,7 +408,7 @@ class Citizen extends FlxSprite
 		}
 		goal = Std.int(FlxRandom.float() * (r - l) + l);
 	}
-	
+
 	public function animationFrame(animName:String, frameNum:UInt, frameIndex:UInt):Void
 	{
 		if (animName == 'give' && frameNum == 2)
@@ -416,23 +416,23 @@ class Citizen extends FlxSprite
 			action = IDLE;
 			animation.play("idle");
 		}
-		
+
 		if (animName == "shovel")
 		{
 			var d:Dust = cast(playstate.fx.recycle(Dust), Dust);
 			d.reset(x + ((facing == FlxObject.RIGHT) ? 14: -6), y + 19);
 		}
 	}
-	
+
 	override public function update():Void
 	{
 		acceleration.x = 0;
 		t += FlxG.elapsed;
 		shovelCooldown -= FlxG.elapsed;
 		giveCooldown -= FlxG.elapsed;
-		
+
 		// IDLE MOVING AROUND
-		
+
 		if (guarding && occupation == HUNTER)
 		{
 			animation.play("idle");
@@ -462,7 +462,7 @@ class Citizen extends FlxSprite
 				y = playstate.groundHeight - height;
 			}
 		}
-		
+
 		// Specific behaviour
 		if (occupation == HUNTER)
 		{
