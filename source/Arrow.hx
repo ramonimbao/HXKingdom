@@ -1,19 +1,19 @@
 package ;
 
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import flash.geom.Point;
 
 import flixel.effects.particles.FlxParticle;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.FlxSprite;
 
 class Arrow extends FlxSprite
 {
 	public var shooter:Citizen;
-	
-	public function new() 
+
+	public function new()
 	{
 		super();
 		loadRotatedGraphic("assets/gfx/arrow.png");
@@ -26,7 +26,7 @@ class Arrow extends FlxSprite
 		width = 2;
 		elasticity = 0.5;
 	}
-	
+
 	public function shotFrom(from:Citizen, at:FlxObject):Void
 	{
 		x = from.x + from.width / 2 + (from.facing == FlxObject.RIGHT ? 6 : -6);
@@ -37,8 +37,8 @@ class Arrow extends FlxSprite
 		//lifespan = 10;
 		shooter = from;
 	}
-	
-	override public function update():Void
+
+	override public function update(elapsed:Float):Void
 	{
 		if (y > cast(FlxG.state, PlayState).water.y)
 		{
@@ -48,5 +48,5 @@ class Arrow extends FlxSprite
 		}
 		angle = (180 / Math.PI) * Math.atan2(velocity.y, velocity.x);
 	}
-	
+
 }

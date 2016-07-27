@@ -4,7 +4,7 @@ import flash.geom.Point;
 
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.FlxSprite;
 
 class CoinFloat extends FlxSprite

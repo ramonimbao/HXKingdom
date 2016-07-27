@@ -5,7 +5,7 @@ import flash.geom.Point;
 import flixel.FlxSprite;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 class Wall extends FlxSprite implements Workable implements Buildable
 {
@@ -151,9 +151,9 @@ class Wall extends FlxSprite implements Workable implements Buildable
 		}
 	}
 
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		t += FlxG.elapsed;
+		t += elapsed;
 		if (this.stage > 0 && !building)
 		{
 			if (this.x > PlayState.GAME_WIDTH / 2)

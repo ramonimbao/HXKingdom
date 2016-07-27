@@ -5,8 +5,8 @@ import flash.geom.Point;
 import flixel.FlxSprite;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.util.FlxPoint;
-import flixel.util.FlxRandom;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRandom;
 
 class Bunny extends FlxSprite
 {
@@ -41,11 +41,11 @@ class Bunny extends FlxSprite
 		cast(cast(FlxG.state, PlayState).coins.recycle(Coin), Coin).drop(this, arrow.shooter);
 	}
 
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// Check for movement input
 		acceleration.x = 0;
-		t += FlxG.elapsed;
+		t += elapsed;
 		if (x + width > PlayState.GAME_WIDTH || x < 0)
 		{
 			kill();
@@ -71,7 +71,7 @@ class Bunny extends FlxSprite
 				animation.play("walk");
 			}
 
-			super.update();
+			super.update(elapsed);
 		}
 		else
 		{

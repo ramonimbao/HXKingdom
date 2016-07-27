@@ -76,9 +76,9 @@ class Water extends FlxSprite
 		// Reduce the range of perlin transform
 	}
 
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		timer += FlxG.elapsed;
+		timer += elapsed;
 		if (weather.changed > weatherChanged)
 		{
 			currentBase = 0xFF000000 | utils.interpolateColor(baseColor, weather.darknessColor, weather.darkness);

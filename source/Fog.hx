@@ -1,11 +1,11 @@
 package ;
 
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.FlxObject;
 import flixel.FlxG;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 class Fog extends FlxGroup
 {
@@ -39,7 +39,7 @@ class Fog extends FlxGroup
 		}
 	}
 
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		for (i in 0...members.length)
 		{
@@ -80,7 +80,7 @@ class Fog extends FlxGroup
 			}
 			weatherChanged = weather.t;
 		}
-		super.update();
+		super.update(elapsed);
 	}
 
 }

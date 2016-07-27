@@ -5,14 +5,14 @@ import flash.geom.Point;
 import flixel.effects.particles.FlxParticle;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.FlxSprite;
 
 class Attention extends FlxParticle
 {
 	public var citizen:Citizen;
 
-	public function new() 
+	public function new()
 	{
 		super();
 		loadGraphic("assets/gfx/attention.png");
@@ -22,7 +22,7 @@ class Attention extends FlxParticle
 		width = 8;
 		alpha = 0.5;
 	}
-	
+
 	public function appearAt(at:Citizen):Void
 	{
 		citizen = at;
@@ -30,11 +30,11 @@ class Attention extends FlxParticle
 		revive();
 		lifespan = 1;
 	}
-	
-	override public function update():Void
+
+	override public function update(elapsed:Float):Void
 	{
 		x = citizen.x + citizen.width / 2 - 4;
-		super.update();
+		super.update(elapsed);
 	}
-	
+
 }

@@ -1,6 +1,6 @@
 package ;
 
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import flash.display.BitmapData;
 import flash.display.GradientType;
 import flash.display.InterpolationMethod;
@@ -14,7 +14,7 @@ import flash.Vector.Vector;
 import flash.Vector.Vector;
 import flash.Vector.Vector;
 import flash.Vector.Vector;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.FlxSprite;
 import flixel.effects.particles.FlxParticle;
 import flixel.group.FlxGroup;

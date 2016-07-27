@@ -6,7 +6,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 class Castle extends FlxSprite implements Buildable
 {
@@ -102,9 +102,9 @@ class Castle extends FlxSprite implements Buildable
 		return (t > BUILD_COOLDOWN && stage < 14);
 	}
 
-	override public function update():Void
+	override public function update(elapsed):Void
 	{
-		t += FlxG.elapsed;
+		t += elapsed;
 		playstate.kingdomRight = Math.max(playstate.kingdomRight, x + width);
 		playstate.kingdomLeft = Math.min(playstate.kingdomLeft, x);
 	}

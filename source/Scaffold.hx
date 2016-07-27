@@ -6,19 +6,19 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 class Scaffold extends FlxSprite
 {
 
-	public function new() 
+	public function new()
 	{
 		super(0, 0);
 		loadGraphic("assets/gfx/scaffold.png");
 		offset.x = 4;
 		width = 24;
 	}
-	
+
 	public function build(over:FlxSprite):Scaffold
 	{
 		revive();
@@ -26,5 +26,5 @@ class Scaffold extends FlxSprite
 		y = over.y;
 		return this;
 	}
-	
+
 }

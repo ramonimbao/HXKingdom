@@ -1,12 +1,12 @@
 package ;
 
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import flash.geom.Point;
 
 import flixel.FlxSprite;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.FlxCamera;
 
 class Troll extends FlxSprite
@@ -180,7 +180,7 @@ class Troll extends FlxSprite
 		}
 	}
 
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		if (wait) {
 			acceleration.x = 0;
@@ -267,7 +267,7 @@ class Troll extends FlxSprite
 					acceleration.x = maxVelocity.x;
 			}
 
-			super.update();
+			super.update(elapsed);
 		}
 	}
 

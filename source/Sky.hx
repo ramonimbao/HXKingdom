@@ -24,7 +24,7 @@ class Sky extends FlxSprite
 		makeGraphic(FlxG.width, FlxG.height, 0x00000000, true);
 	}
 
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		if (weather.changed > weatherChanged) {
 			utils.gradientOverlay(pixels, [weather.sky, weather.horizon, weather.haze], 90, 1);

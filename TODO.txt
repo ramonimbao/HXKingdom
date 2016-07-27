@@ -1,5 +1,4 @@
 MISSING:
-- ExplodingText.hx
 - Farmland.hx
 - Firefly.hx
 - Reed.hx

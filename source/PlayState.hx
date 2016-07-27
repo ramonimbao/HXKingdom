@@ -1,7 +1,7 @@
 package ;
 
 import flixel.FlxObject;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import flash.display.StageDisplayState;
 import flixel.FlxG;
 import flixel.group.FlxGroup;
@@ -9,7 +9,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.tile.FlxTilemap;
 import flixel.text.FlxText;
-import flixel.text.FlxTextField;
+import flixel.addons.text.FlxTextField;
 import flixel.system.FlxSound;
 import flixel.FlxCamera;
 
@@ -17,7 +17,7 @@ import flash.geom.*;
 import flash.events.Event;
 import flash.filters.BlurFilter;
 import flixel.addons.display.FlxBackdrop;
-import flixel.util.FlxRect;
+import flixel.math.FlxRect;
 import flash.geom.Rectangle;
 
 import openfl.Assets;
@@ -435,7 +435,7 @@ class PlayState extends FlxState
 	*/
 
 	//=== GAME LOGIC ===//
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// Collisions
 
@@ -593,7 +593,7 @@ class PlayState extends FlxState
 			FlxG.switchState(new PlayState(savedProgress));
 		}
 
-		super.update();
+		super.update(elapsed);
 
 		if (FlxG.keys.justPressed.S)
 		{

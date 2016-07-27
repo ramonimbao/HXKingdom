@@ -7,7 +7,7 @@ import flixel.FlxG;
 import flixel.FlxCamera;
 import flixel.group.FlxGroup;
 import flixel.FlxObject;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
 
 class Player extends FlxSprite
@@ -138,7 +138,7 @@ class Player extends FlxSprite
 		changeCoins(1);
 	}
 
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		lastTrollHit += FlxG.elapsed;
 
@@ -252,7 +252,7 @@ class Player extends FlxSprite
 				}
 			}
 		}
-		super.update();
+		super.update(elapsed);
 
 		//Find selected shop/wall
 		if (selectedBuilding != null)

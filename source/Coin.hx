@@ -1,12 +1,12 @@
 package ;
 
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import flash.geom.Point;
 
 import flixel.effects.particles.FlxParticle;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.FlxSprite;
 import flixel.effects.FlxFlicker;
 
@@ -58,7 +58,7 @@ class Coin extends FlxParticle
 		return this;
 	}
 
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		if (!called && lifespan <= TOTAL_LIFESPAN - OWNER_LIFESPAN / 2)
 		{
@@ -77,6 +77,6 @@ class Coin extends FlxParticle
 			FlxFlicker.flicker(this);
 			owner = null;
 		}
-		super.update();
+		super.update(elapsed);
 	}
 }

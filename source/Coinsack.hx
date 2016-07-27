@@ -56,9 +56,9 @@ class Coinsack extends FlxSprite
 		t = 0;
 	}
 
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		t += FlxG.elapsed;
+		t += elapsed;
 		alpha = FADE_TIME - t;
 	}
 }

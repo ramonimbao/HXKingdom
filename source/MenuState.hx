@@ -6,7 +6,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
-import flixel.util.FlxMath;
+import flixel.math.FlxMath;
 
 /**
  * A FlxState which can be used for the game's menu.
@@ -61,9 +61,9 @@ class MenuState extends FlxState
 	/**
 	 * Function that is called once every frame.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 
 		if (FlxG.mouse.x > NoioImg.x && FlxG.mouse.x < NoioImg.x + NoioImg.width &&
 			FlxG.mouse.y > NoioImg.y && FlxG.mouse.y < NoioImg.y + NoioImg.height)

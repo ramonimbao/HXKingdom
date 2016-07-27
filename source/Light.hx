@@ -1,6 +1,6 @@
 package ;
 
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import flash.display.BlendMode;
 import flixel.FlxSprite;
 import flixel.FlxG;
@@ -55,7 +55,7 @@ class Light extends FlxSprite
 		beam.blend = BlendMode.SCREEN;
 	}
 
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		getScreenXY(_point);
 		burning = ( -128 < _point.x && _point.x < FlxG.width + 128);
