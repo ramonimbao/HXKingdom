@@ -276,7 +276,7 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		FlxG.camera.bgColor = 0xFFAFB4C2;
-		FlxG.camera.bounds = new FlxRect(0, 0, GAME_WIDTH, 196);
+		FlxG.camera.setScrollBoundsRect(0, 0, GAME_WIDTH, 196);
 		FlxG.worldBounds.width = GAME_WIDTH;
 		FlxG.worldBounds.height = 300;
 
@@ -306,7 +306,7 @@ class PlayState extends FlxState
 		cameraTarget.target = player;
 		cameraTarget.offset.y = -4;
 		cameraTarget.snap();
-		FlxG.camera.follow(cameraTarget, FlxCamera.STYLE_LOCKON);
+		FlxG.camera.follow(cameraTarget, FlxCameraFollowStyle.LOCKON);
 
 		// Set up some debugging
 		FlxG.watch.add(this, "timeToNextPhase");
