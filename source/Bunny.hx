@@ -14,6 +14,7 @@ class Bunny extends FlxSprite
 	public static inline var TURN_TIME:Float = 1;
 
 	private var t:Float;
+	private var random:FlxRandom = new FlxRandom();
 
 	public function new(X:Float, Y:Float)
 	{
@@ -26,7 +27,7 @@ class Bunny extends FlxSprite
 		maxVelocity.y = 100;
 		maxVelocity.x = 30;
 		drag.x = 1000;
-		animation.add("walk", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], Std.int(10 + FlxRandom.float() * 5), true);
+		animation.add("walk", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], Std.int(10 + random.float() * 5), true);
 		animation.add("stand", [0], 10, true);
 		animation.add("dead", [11], 10, true);
 		y = cast(FlxG.state, PlayState).groundHeight - 12;
@@ -55,7 +56,7 @@ class Bunny extends FlxSprite
 			if (t > TURN_TIME)
 			{
 				t = 0;
-				if (FlxRandom.float() < 0.4)
+				if (random.float() < 0.4)
 				{
 					facing = (facing == FlxObject.LEFT) ? FlxObject.RIGHT : FlxObject.LEFT;
 				}

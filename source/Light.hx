@@ -23,6 +23,7 @@ class Light extends FlxSprite
 
 	public var playstate:PlayState;
 	public var weather:Weather;
+	private var random:FlxRandom = new FlxRandom();
 
 	public function new(X:Float, Y:Float)
 	{
@@ -75,7 +76,7 @@ class Light extends FlxSprite
 	{
 		if (burning)
 		{
-			beam.alpha += FlxRandom.float() * 0.15 - 0.075;
+			beam.alpha += random.float() * 0.15 - 0.075;
 			if (beam.alpha < 0.3)
 			{
 				beam.alpha += 0.01;

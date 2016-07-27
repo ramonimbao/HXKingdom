@@ -17,6 +17,7 @@ class Coin extends FlxParticle
 	public var owner:FlxObject;
 	public var justThrown:Bool;
 	public var called:Bool;
+	private var random:FlxRandom = new FlxRandom();
 
 	public function new()
 	{
@@ -41,12 +42,12 @@ class Coin extends FlxParticle
 		lifespan = TOTAL_LIFESPAN;
 		if (far)
 		{
-			velocity.x = FlxRandom.float() * 140 - 70;
+			velocity.x = random.float() * 140 - 70;
 			velocity.y = -180;
 		}
 		else
 		{
-			velocity.x = FlxRandom.float() * 60 - 30;
+			velocity.x = random.float() * 60 - 30;
 			velocity.y = -180;
 		}
 		called = false;

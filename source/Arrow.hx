@@ -12,6 +12,7 @@ import flixel.FlxSprite;
 class Arrow extends FlxSprite
 {
 	public var shooter:Citizen;
+	private var random:FlxRandom = new FlxRandom();
 
 	public function new()
 	{
@@ -33,7 +34,7 @@ class Arrow extends FlxSprite
 		y = from.y + 10;
 		revive();
 		velocity.x = (from.facing == FlxObject.RIGHT ? maxVelocity.x : -maxVelocity.x);
-		velocity.y = - Math.abs(at.x - from.x) + FlxRandom.float() * 40;
+		velocity.y = - Math.abs(at.x - from.x) + random.float() * 40;
 		//lifespan = 10;
 		shooter = from;
 	}

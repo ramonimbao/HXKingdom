@@ -143,6 +143,7 @@ class PlayState extends FlxState
 
 	private var weatherPresets:WeatherPresets;
 	private var utils:Utils = new Utils();
+	private var random:FlxRandom = new FlxRandom();
 
 	public var PHASES:Array<Array<Dynamic>>;
 	public var PHASES_CYCLE:Array<Array<Dynamic>>;
@@ -490,9 +491,9 @@ class PlayState extends FlxState
 		{
 			bunnySpawnTimer = MIN_BUNNY_SPAWNTIME;
 			var probAdd:Float = 0.5 + 2 * p * (1 - p);
-			if (FlxRandom.float() < probAdd)
+			if (random.float() < probAdd)
 			{
-				var rx:Int = Std.int(FlxRandom.float() * grassTiles.length);
+				var rx:Int = Std.int(random.float() * grassTiles.length);
 				bunnies.add(new Bunny(grassTiles[rx] * 32, 0));
 			}
 		}
@@ -503,7 +504,7 @@ class PlayState extends FlxState
 		// Spawn beggars
 		if (beggars.countLiving() < minBeggars)
 		{
-			beggars.add(new Citizen((FlxRandom.float() < 0.5) ? 16 : GAME_WIDTH - 16, 0));
+			beggars.add(new Citizen((random.float() < 0.5) ? 16 : GAME_WIDTH - 16, 0));
 		}
 
 		// Spawn trolls

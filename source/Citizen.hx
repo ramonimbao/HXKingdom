@@ -67,6 +67,7 @@ class Citizen extends FlxSprite
 	public var playstate:PlayState;
 	public var castle:Castle;
 	private var utils:Utils = new Utils();
+	private var random:FlxRandom = new FlxRandom();
 
 	public function new(X:Float, Y:Float)
 	{
@@ -82,8 +83,8 @@ class Citizen extends FlxSprite
 		super(X, Y);
 		goal = FlxG.worldBounds.width / 2;
 		drag.x = 500;
-		guardLeftBorder = (FlxRandom.float() > 0.5);
-		myColor = utils.HSVtoRGB(FlxRandom.float() * 360, 0.1 + FlxRandom.float() * 0.2, 0.6);
+		guardLeftBorder = (random.float() > 0.5);
+		myColor = utils.HSVtoRGB(random.float() * 360, 0.1 + random.float() * 0.2, 0.6);
 		var d:Float = Math.random() * 20;
 		skin = utils.HSVtoRGB(d, 0.19 + (d / 100), 0.97 - (d / 33));
 
@@ -130,11 +131,11 @@ class Citizen extends FlxSprite
 			case HUNTER:
 				if (guardLeftBorder)
 				{
-					myColor = utils.HSVtoRGB(220 + FlxRandom.float() * 20, 0.2 + FlxRandom.float() * 0.3, 0.7);
+					myColor = utils.HSVtoRGB(220 + random.float() * 20, 0.2 + random.float() * 0.3, 0.7);
 				}
 				else
 				{
-					myColor = utils.HSVtoRGB(0 + FlxRandom.float() * 20, 0.2 + FlxRandom.float() * 0.3, 0.7);
+					myColor = utils.HSVtoRGB(0 + random.float() * 20, 0.2 + random.float() * 0.3, 0.7);
 				}
 				loadGraphic("assets/gfx/hunter.png", true, 32, 32, true);
 				utils.replaceColor(pixels, BASE_COLOR, myColor);
@@ -406,7 +407,7 @@ class Citizen extends FlxSprite
 			l = playstate.kingdomLeft;
 			r = playstate.kingdomRight;
 		}
-		goal = Std.int(FlxRandom.float() * (r - l) + l);
+		goal = Std.int(random.float() * (r - l) + l);
 	}
 
 	public function animationFrame(animName:String, frameNum:UInt, frameIndex:UInt):Void
@@ -444,7 +445,7 @@ class Citizen extends FlxSprite
 			// Near goal
 			if (Math.abs(goal -x) < 2)
 			{
-				if (t > 2.0 && FlxRandom.float() < 0.3)
+				if (t > 2.0 && random.float() < 0.3)
 				{
 					t = 0;
 					pickNewGoal();

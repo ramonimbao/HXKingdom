@@ -29,6 +29,7 @@ class Troll extends FlxSprite
 
 	private var playstate:PlayState;
 	private var utils:Utils = new Utils();
+	private var random:FlxRandom = new FlxRandom();
 
 	public function new()
 	{
@@ -105,9 +106,9 @@ class Troll extends FlxSprite
 			offset.y = 12;
 			width = 8;
 			height = 20;
-			animation.add("walk", [0, 1, 2, 3, 4, 5, 6, 7, 8], Std.int(10+FlxRandom.float()*5), true);
-			animation.add("walk_crown", [9, 10, 11, 12, 13, 14, 15, 16, 17], Std.int(10 + FlxRandom.float() * 5), true);
-			animation.add("walk_coin", [18, 19, 20, 21, 22, 23, 24, 25, 26], Std.int(10 + FlxRandom.float() * 5), true);
+			animation.add("walk", [0, 1, 2, 3, 4, 5, 6, 7, 8], Std.int(10+random.float()*5), true);
+			animation.add("walk_crown", [9, 10, 11, 12, 13, 14, 15, 16, 17], Std.int(10 + random.float() * 5), true);
+			animation.add("walk_coin", [18, 19, 20, 21, 22, 23, 24, 25, 26], Std.int(10 + random.float() * 5), true);
 			animation.add("stand", [0], 10, true);
 		}
 	}

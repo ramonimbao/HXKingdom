@@ -17,6 +17,7 @@ class Fog extends FlxGroup
 	private var weatherChanged:Float;
 	private var _fg:FlxSprite;
 	private var _point:FlxPoint;
+	private var random:FlxRandom = new FlxRandom();
 
 	public function new(weather:Weather)
 	{
@@ -31,9 +32,9 @@ class Fog extends FlxGroup
 		{
 			_fg = new FlxSprite(0, 0).loadGraphic("assets/gfx/fog.png", true, 256, 96);
 			_fg.scrollFactor.y = 1.2;
-			_fg.scrollFactor.x = (FlxRandom.float() < 0.5) ? 1.5 : 2.5;
-			_fg.facing = (FlxRandom.float() < 0.5) ? FlxObject.LEFT : FlxObject.RIGHT;
-			_fg.animation.frameIndex = Std.int(FlxRandom.float() * 4);
+			_fg.scrollFactor.x = (random.float() < 0.5) ? 1.5 : 2.5;
+			_fg.facing = (random.float() < 0.5) ? FlxObject.LEFT : FlxObject.RIGHT;
+			_fg.animation.frameIndex = Std.int(random.float() * 4);
 			_fg.kill();
 			add(_fg);
 		}
@@ -64,7 +65,7 @@ class Fog extends FlxGroup
 			if (countLiving() < MAXFOG * weather.fog)
 			{
 				_fg.reset(0, 0);
-				if (FlxRandom.float() < 0.5)
+				if (random.float() < 0.5)
 				{
 					_fg.x = FlxG.camera.scroll.x * _fg.scrollFactor.x - _fg.width;
 				}
@@ -72,7 +73,7 @@ class Fog extends FlxGroup
 				{
 					_fg.x = (FlxG.camera.scroll.x) * _fg.scrollFactor.x + FlxG.width;
 				}
-				_fg.y = 112 + 50 * FlxRandom.float();
+				_fg.y = 112 + 50 * random.float();
 				var comp:Int = Std.int((1 - weather.darkness) * 255);
 				var color:UInt = comp << 16 | comp <<  8 | comp;
 				_fg.color = color;

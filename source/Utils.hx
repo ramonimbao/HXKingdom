@@ -30,6 +30,7 @@ class Utils
 
 	public static var ROMAN_VALUES:Array<Int>;
 	public static var ROMAN_LETTERS:Array<String>;
+	private var random:FlxRandom = new FlxRandom();
 
 	public function new()
 	{
@@ -352,7 +353,7 @@ class Utils
 			{
 				if ((object.framePixels.getPixel32(x + Std.int(gibSize / 2), y + Std.int(gibSize / 2)) >>> 24) > 0)
 				{
-					if (FlxRandom.float() < portion)
+					if (random.float() < portion)
 					{
 						gib = cast(group.recycle(FlxParticle), FlxParticle);
 						if (gib.frameWidth != gibSize || gib.frameHeight != gibSize)
@@ -375,8 +376,8 @@ class Utils
 						gib.x = object.x - object.offset.x + x;
 						gib.y = object.y - object.offset.y + y;
 						gib.acceleration.y = 900;
-						gib.velocity.x = FlxRandom.float() * 80 - 40;
-						gib.velocity.y = -130 - FlxRandom.float() * 30;
+						gib.velocity.x = random.float() * 80 - 40;
+						gib.velocity.y = -130 - random.float() * 30;
 					}
 				}
 
