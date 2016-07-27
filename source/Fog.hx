@@ -47,7 +47,7 @@ class Fog extends FlxGroup
 			_fg = cast(members[i],FlxSprite);
 			if (_fg.exists)
 			{
-				_fg.getScreenXY(_point);
+				_fg.getScreenPosition(_point);
 				if (_point.x + _fg.width < -100 || _point.x > FlxG.width + 100)
 				{
 					_fg.kill();

@@ -108,7 +108,7 @@ class Water extends FlxSprite
 		var px:BitmapData = pixels;
 		matrix.identity();
 		matrix.scale(1, -1);
-		getScreenXY(_point);
+		getScreenPosition(_point);
 		matrix.translate( -_point.x, _point.y);
 		// Clear the reflection
 		px.fillRect(rect, currentBase);
@@ -125,7 +125,7 @@ class Water extends FlxSprite
 		for (i in 0...lights.length)
 		{
 			l = cast(lights.members[i], Light);
-			l.getScreenXY(_point);
+			l.getScreenPosition(_point);
 			if (l.visible && -64 < _point.x && _point.x < FlxG.width + 64)
 			{
 				l.reflected.alpha = weather.darkness * 0.8;

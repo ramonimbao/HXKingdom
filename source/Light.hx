@@ -58,7 +58,7 @@ class Light extends FlxSprite
 
 	override public function update(elapsed:Float):Void
 	{
-		getScreenXY(_point);
+		getScreenPosition(_point);
 		burning = ( -128 < _point.x && _point.x < FlxG.width + 128);
 	}
 
@@ -66,7 +66,7 @@ class Light extends FlxSprite
 	{
 		if (burning)
 		{
-			getScreenXY(_point);
+			getScreenPosition(_point);
 			darkness.stamp(beam, Math.floor(_point.x - beam.width / 2), Math.floor(_point.y - beam.height / 2));
 		}
 		super.draw();
