@@ -12,28 +12,28 @@ class Minimap extends FlxSprite
 {
 	public var members:Array<FlxBasic>;
 	public var colors:Array<UInt>;
-	
+
 	public function new(X:Float = 0, Y:Float = 0, w:Int = 100, h:Int = 10)
 	{
 		members = [];
 		colors = [];
-		
+
 		super(X, Y);
 		scrollFactor.x = scrollFactor.y = 0;
 		makeGraphic(w, h, 0, true);
 	}
-	
+
 	public function add(member:FlxBasic, color:UInt = 0xFFFF0000):Void
 	{
 		members.push(member);
 		colors.push(color);
 	}
-	
+
 	override public function draw():Void
 	{
 		//fill(0x55000000);
 		pixels.fillRect(new Rectangle(0, 0, width, height), 0x55000000);
-		
+
 		for (i in 0...members.length)
 		{
 			drawDot(members[i], colors[i]);
@@ -41,12 +41,12 @@ class Minimap extends FlxSprite
 		dirty = true;
 		super.draw();
 	}
-	
+
 	public function drawDot(m:FlxBasic, color:UInt):Void
 	{
-		if (Std.is(m, FlxGroup))
+		if (Std.is(m, FlxTypedGroup))
 		{
-			var group:FlxGroup = cast(m, FlxGroup);
+			var group:FlxTypedGroup<Dynamic> = cast(m, FlxTypedGroup<Dynamic>);
 			for ( i in 0...group.length)
 			{
 				drawDot(group.members[i], color);
@@ -62,5 +62,5 @@ class Minimap extends FlxSprite
 			this.pixels.setPixel32(ex, ey, color);
 		}
 	}
-	
+
 }

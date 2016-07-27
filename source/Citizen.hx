@@ -235,7 +235,7 @@ class Citizen extends FlxSprite
 		}
 	}
 
-	public function checkShootable(group:FlxGroup):Void
+	public function checkShootable(group:FlxTypedGroup<Dynamic>):Void
 	{
 		var c:FlxObject;
 		for (i in 0...group.length)

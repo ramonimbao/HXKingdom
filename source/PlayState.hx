@@ -4,6 +4,7 @@ import flixel.FlxObject;
 import flixel.math.FlxRandom;
 import flash.display.StageDisplayState;
 import flixel.FlxG;
+import flixel.FlxBasic;
 import flixel.group.FlxGroup;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -42,8 +43,8 @@ class PlayState extends FlxState
 	public var coins:FlxGroup = new FlxGroup();
 	public var beggars:FlxGroup = new FlxGroup();
 	public var characters:FlxGroup = new FlxGroup();
-	public var trolls:FlxGroup = new FlxGroup();
-	public var trollsNoCollide:FlxGroup = new FlxGroup();
+	public var trolls:FlxTypedGroup<Troll> = new FlxTypedGroup<Troll>();
+	public var trollsNoCollide:FlxTypedGroup<Troll> = new FlxTypedGroup<Troll>();
 	public var gibs:FlxGroup = new FlxGroup();
 	public var indicators:FlxGroup = new FlxGroup();
 
@@ -371,8 +372,8 @@ class PlayState extends FlxState
 		add(player = new Player(100, 68));
 		add(characters = new FlxGroup());
 
-		add(trolls = new FlxGroup());
-		add(trollsNoCollide = new FlxGroup());
+		add(trolls = new FlxTypedGroup<Troll>());
+		add(trollsNoCollide = new FlxTypedGroup<Troll>());
 		add(walls = new FlxGroup());
 		add(coins = new FlxGroup(100));
 		add(gibs = new FlxGroup(200));
@@ -515,8 +516,8 @@ class PlayState extends FlxState
 			retreatDelay -= FlxG.elapsed;
 			if (retreatDelay <= 0)
 			{
-				trolls.callAll("retreat");
-				trollsNoCollide.callAll("retreat");
+				trolls.forEach(function(object:Troll){ object.retreat(); });
+				trollsNoCollide.forEach(function(object:Troll){ object.retreat(); });
 			}
 		}
 
@@ -936,8 +937,8 @@ class PlayState extends FlxState
 
 		player.x = playerX;
 
-		characters.callAll("kill");
-		archers.callAll("kill");
+		characters.forEach(function(object:FlxBasic){ object.kill(); });
+		archers.forEach(function(object:FlxBasic){ object.kill(); });
 		var c:Citizen;
 		while (numPoor > 0)
 		{
@@ -979,9 +980,9 @@ class PlayState extends FlxState
 		day.setValue(newDay - 1);
 		nextPhase();
 
-		trolls.callAll("kill");
-		trollsNoCollide.callAll("kill");
-		gibs.callAll("kill");
+		trolls.forEach(function(object:FlxBasic){ object.kill(); });
+		trollsNoCollide.forEach(function(object:FlxBasic){ object.kill(); });
+		gibs.forEach(function(object:FlxBasic){ object.kill(); });
 	}
 
 	public function trollRetreat(delay:Float = 10):Void
@@ -992,8 +993,8 @@ class PlayState extends FlxState
 		{
 			//trollsToSpawn.splice(0);
 			trollsToSpawn.splice(0, trolls.length);
-			trolls.callAll("retreat");
-			trollsNoCollide.callAll("retreat");
+			trolls.forEach(function(object:Troll){ object.retreat(); });
+			trollsNoCollide.forEach(function(object:Troll){ object.retreat(); });
 		}
 	}
 
