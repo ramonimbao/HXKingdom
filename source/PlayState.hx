@@ -1,15 +1,16 @@
 package ;
 
 import flixel.FlxObject;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import flash.display.StageDisplayState;
 import flixel.FlxG;
+import flixel.FlxBasic;
 import flixel.group.FlxGroup;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.tile.FlxTilemap;
 import flixel.text.FlxText;
-import flixel.text.FlxTextField;
+import flixel.addons.text.FlxTextField;
 import flixel.system.FlxSound;
 import flixel.FlxCamera;
 
@@ -17,10 +18,9 @@ import flash.geom.*;
 import flash.events.Event;
 import flash.filters.BlurFilter;
 import flixel.addons.display.FlxBackdrop;
-import flixel.util.FlxRect;
+import flixel.math.FlxRect;
 import flash.geom.Rectangle;
 
-import flash.xml.XMLList;
 import openfl.Assets;
 
 import mochi.haxe.MochiDigits;
@@ -36,18 +36,18 @@ class PlayState extends FlxState
 	public var backdropClose:FlxBackdrop;
 	public var backdrop:FlxGroup;
 	public var haze:Haze;
-	
+
 	public var player:FlxSprite;
-	public var bunnies:FlxGroup;
-	public var farmland:FlxGroup;
-	public var coins:FlxGroup;
-	public var beggars:FlxGroup;
-	public var characters:FlxGroup;
-	public var trolls:FlxGroup;
-	public var trollsNoCollide:FlxGroup;
-	public var gibs:FlxGroup;
-	public var indicators:FlxGroup;
-	
+	public var bunnies:FlxGroup = new FlxGroup();
+	public var farmland:FlxGroup = new FlxGroup();
+	public var coins:FlxGroup = new FlxGroup();
+	public var beggars:FlxGroup = new FlxGroup();
+	public var characters:FlxGroup = new FlxGroup();
+	public var trolls:FlxTypedGroup<Troll> = new FlxTypedGroup<Troll>();
+	public var trollsNoCollide:FlxTypedGroup<Troll> = new FlxTypedGroup<Troll>();
+	public var gibs:FlxGroup = new FlxGroup();
+	public var indicators:FlxGroup = new FlxGroup();
+
 	public var walls:FlxGroup;
 	public var level:FlxGroup;
 	public var archers:FlxGroup;
@@ -66,31 +66,31 @@ class PlayState extends FlxState
 	public var centerText:FlxText;
 	public var sack:Coinsack;
 	public var noise:FlxSprite;
-	
+
 	public var weather:Weather;
-	
+
 	// Extra references
 	public var castle:Castle;
 	public var minimap:Minimap;
-	
+
 	public var weatherInput:FlxTextField;
-	
+
 	// CONSTANTS
 	public static inline var CHEATS:Bool = true; // um, why is this set to true?
 	public static inline var WEATHERCONTROLS:Bool = false;
-	
+
 	public static inline var GAME_WIDTH:Int = 3840;
 	public static inline var MIN_KINGDOM_WIDTH:Int = 200;
-	
+
 	public static inline var MAX_BUNNIES:Int = 50;
 	public static inline var MIN_BUNNY_SPAWNTIME:Float = 6.0;
-	
+
 	public static inline var MIN_TROLL_SPAWNTIME:Float = 1.0;
-	
+
 	public static inline var TEXT_MAX_ALPHA:Float = 0.7;
 	public static inline var TEXT_READ_SPEED:Float = 0.20;
 	public static inline var TEXT_MIN_TIME:Float = 6;
-	
+
 	// Game vars
 	public var kingdomLeft:Float;
 	public var kingdomRight:Float;
@@ -105,16 +105,16 @@ class PlayState extends FlxState
 	public var retreatDelay:Float;
 	public var gameOver:Bool;
 	public var day:MochiDigits;
-	
+
 	public var trollHealth:Float;
 	public var trollMaxSpeed:Float;
 	public var trollJumpHeight:Float;
 	public var trollJumpiness:Float;
 	public var trollConfusion:Float;
 	public var trollBig:Bool;
-	
-	public var grassTiles:Array<UInt>;
-	
+
+	public var grassTiles:Array<UInt> = new Array<UInt>();
+
 	// Progress variables
 	public var reachedVillage:Bool;
 	public var recruitedCitizen:Bool;
@@ -126,29 +126,30 @@ class PlayState extends FlxState
 	public var outOfGoldAdvice:Bool;
 	public var savedProgress:String;
 	public var restoreProgress:String;
-	
+
 	// Internals
 	public var textTimeout:Float;
 	public var textQueue:Array<Dynamic>;
 	public var cameraTarget:CameraTarget;
 	public var cameraTimeout:Float;
-	
+
 	public var music:FlxSound ;
 	public var cicada:FlxSound;
 	public var owls:FlxSound ;
 	public var birds:FlxSound;
-	
+
 	// Cheatvars
 	private var cheatNoTrolls:Bool;
 	private var untouchable:Bool;
-	
+
 	private var weatherPresets:WeatherPresets;
-	private var utils:Utils;
-	
+	private var utils:Utils = new Utils();
+	private var random:FlxRandom = new FlxRandom();
+
 	public var PHASES:Array<Array<Dynamic>>;
 	public var PHASES_CYCLE:Array<Array<Dynamic>>;
-	
-	public function new(progress:String=null) 
+
+	public function new(progress:String=null)
 	{
 		// SETTING VARIABLES BECAUSE HAXE!!!
 		kingdomLeft = 1720;
@@ -164,14 +165,14 @@ class PlayState extends FlxState
 		retreatDelay = 0;
 		gameOver = false;
 		day = new MochiDigits(0);
-		
+
 		trollHealth = 1;
 		trollMaxSpeed = 20;
 		trollJumpHeight = 20;
 		trollJumpiness = 30;
 		trollConfusion = 30;
 		trollBig = false;
-		
+
 		reachedVillage = false;
 		recruitedCitizen = false;
 		boughtItem = false;
@@ -182,24 +183,24 @@ class PlayState extends FlxState
 		outOfGoldAdvice = false;
 		savedProgress = null;
 		restoreProgress = null;
-		
+
 		textTimeout = 0;
 		textQueue = [];
 		cameraTimeout = 0;
-		
+
 		music = null;
 		cicada = null;
 		owls = null;
 		birds = null;
-		
+
 		cheatNoTrolls = false;
 		untouchable = false;
-		
+
 		super();
 		restoreProgress = progress;
-		
+
 		weatherPresets = new WeatherPresets();
-		
+
 		PHASES = [
            // INTRO (0-3)
 		   [weatherPresets.FOGGY, 10, null, phaseFirst, null],
@@ -233,11 +234,11 @@ class PlayState extends FlxState
            [weatherPresets.NIGHTFOGGY, 60, 30, phaseNightFive, null],
            // SIX (27-30)
            [weatherPresets.DAWNBLEAK, 25, null, daybreak, 'MusicDay4'],
-           [weatherPresets.DAYMONOCHROME, 60, null, null, null],            
+           [weatherPresets.DAYMONOCHROME, 60, null, null, null],
            [weatherPresets.DUSKPINK, 15, null, null, null],
            [weatherPresets.NIGHTCLEAR, 70, 30, phaseNightSix, 'MusicNight4'],
            // SEVEN (31-34)
-           [weatherPresets.DAWNCLEARORANGE, 20, null, daybreak, null], 
+           [weatherPresets.DAWNCLEARORANGE, 20, null, daybreak, null],
            [weatherPresets.DAYCLEARCOLD, 40, null, null, 'MusicDay3'],
            [weatherPresets.DUSKCLEAR, 20, null, null, null],
            [weatherPresets.NIGHTSHINE, 70, 30, phaseNightSeven, 'MusicNight3'],
@@ -246,10 +247,10 @@ class PlayState extends FlxState
            [weatherPresets.DAYORANGESKY, 40, null, null, null],
            [weatherPresets.DUSKFOGGY, 20, null, null, null],
            // BIG WAVE
-           [weatherPresets.NIGHTPURPLE, 80, 30, phaseNightEight, 'usicNight4'],  
+           [weatherPresets.NIGHTPURPLE, 80, 30, phaseNightEight, 'usicNight4'],
            // NINE (39-42)
            [weatherPresets.DAWNBRIGHT, 20, null, daybreak, null],
-           [weatherPresets.DAYPASTEL, 75, null, null, 'MusicDay2'],            
+           [weatherPresets.DAYPASTEL, 75, null, null, 'MusicDay2'],
            [weatherPresets.DUSKTAN, 20, null, null, 'MusicNight4'],
            // SINGLE TROLL, MASSIVE HEALTH
            [weatherPresets.NIGHTREDMOON, 60, 30, phaseNightNine, null],
@@ -261,7 +262,7 @@ class PlayState extends FlxState
            [weatherPresets.NIGHTLONG, 60, 30, phaseNightTen, null],
            [weatherPresets.DAWNEARLY, 15, null, trollRetreat, null],
         ];
-		
+
 		PHASES_CYCLE = [
 			[weatherPresets.DAWNREDMOON, 20, null, daybreak, null],
 			[weatherPresets.DAYPASTEL, 40, null, null, null],
@@ -270,18 +271,18 @@ class PlayState extends FlxState
 			[null, 55, null, phaseNightCycle, null]
 		];
 	}
-	
+
 	//=== INITIALIZATION ==//
 	override public function create():Void
 	{
 		FlxG.camera.bgColor = 0xFFAFB4C2;
-		FlxG.camera.bounds = new FlxRect(0, 0, GAME_WIDTH, 196);
+		FlxG.camera.setScrollBoundsRect(0, 0, GAME_WIDTH, 196);
 		FlxG.worldBounds.width = GAME_WIDTH;
 		FlxG.worldBounds.height = 300;
-		
-		buildLevel(Assets.getText("assets/levels/compiled/fields.oel"));
+
+		buildLevel(Assets.getText("assets/levels/fields.oel"));
 		weather.tweenTo(weatherPresets.FOGGY, 0);
-		
+
 		if (CHEATS)
 		{
 			add(minimap = new Minimap(0, FlxG.height - 1, 100, 1));
@@ -292,21 +293,21 @@ class PlayState extends FlxState
 			minimap.add(characters, 0xFFA281F8);
 			minimap.add(walls, 0xFF969696);
 		}
-		
+
 		showCoins();
-		
+
 		// Load up environment sounds
 		cicada = FlxG.sound.play("CicadaSound", 0.0, true);
 		owls = FlxG.sound.play("OwlsSound", 0.0, true);
 		birds = FlxG.sound.play("BirdsSound", 0.0, true);
-		
+
 		// Camera
 		add(cameraTarget = new CameraTarget());
 		cameraTarget.target = player;
 		cameraTarget.offset.y = -4;
 		cameraTarget.snap();
-		FlxG.camera.follow(cameraTarget, FlxCamera.STYLE_LOCKON);
-		
+		FlxG.camera.follow(cameraTarget, FlxCameraFollowStyle.LOCKON);
+
 		// Set up some debugging
 		FlxG.watch.add(this, "timeToNextPhase");
 		FlxG.watch.add(weather, "timeOfDay");
@@ -314,21 +315,21 @@ class PlayState extends FlxState
 		FlxG.watch.add(weather, "ambient");
 		FlxG.watch.add(weather, "ambientAmount");
 		FlxG.watch.add(this, "phase");
-		
+
 		// TODO: Set up weathercontrols
 		// if (WEATHERCONTROLS)
 		// {
 		//
 		// }
 	}
-	
+
 	// TODO: THIS
 	// can't access flixel autocomplete stuff after update
 	//public function setWeatherFromInput():Void
 	//{
-	//	
+	//
 	//}
-	
+
 	public function progressAll():Void
 	{
 		reachedVillage = true;
@@ -338,9 +339,10 @@ class PlayState extends FlxState
 		buyScytheAdvice = true;
 		expandedKingdomAdvice = true;
 	}
-	
+
 	public function buildLevel(levelXML:Dynamic):Void
 	{
+		trace(levelXML);
 		// Load XML
 		var oel:Xml = Xml.parse(levelXML).firstElement();
 		// Variable
@@ -348,7 +350,7 @@ class PlayState extends FlxState
 		var backdropCloseGraphic:String = oel.get("backdropCloseImg");
 		var waterHeight:Int = Std.parseInt(oel.get("waterHeight"));
 		darkness = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, 0x88000000);
-		
+
 		// Basic setup
 		weather = new Weather();
 		add(sky = new Sky(weather));
@@ -360,7 +362,7 @@ class PlayState extends FlxState
 		backdrop = new FlxGroup();
 		for (i in 0...backdrop.members.length)
 			add(backdrop.members[i]);
-		
+
 		add(haze = new Haze(0, 0, weather));
 		// Movables
 		add(archers = new FlxGroup(10));
@@ -369,14 +371,14 @@ class PlayState extends FlxState
 		add(bunnies = new FlxGroup());
 		add(player = new Player(100, 68));
 		add(characters = new FlxGroup());
-		
-		add(trolls = new FlxGroup());
-		add(trollsNoCollide = new FlxGroup());
+
+		add(trolls = new FlxTypedGroup<Troll>());
+		add(trollsNoCollide = new FlxTypedGroup<Troll>());
 		add(walls = new FlxGroup());
 		add(coins = new FlxGroup(100));
 		add(gibs = new FlxGroup(200));
 		add(indicators = new FlxGroup());
-		
+
 		// Level
 		add(level = new FlxGroup());
 		add(floor = new FlxTilemap());
@@ -387,32 +389,32 @@ class PlayState extends FlxState
 		darkness.scrollFactor.x = darkness.scrollFactor.y = 0;
 		darkness.blend = BlendMode.MULTIPLY;
 		add(darkness);
-		
+
 		add(centerText = new FlxText(10, 138, FlxG.width, "TEXT"));
 		centerText.setFormat("04b03", 32, 0xFFFFFFFF, "center", 0xAA333333);
 		centerText.visible = false;
 		centerText.scrollFactor.x = 0;
 		centerText.alpha = 1.0;
-		
+
 		add(water = new Water( -4, waterHeight, FlxG.width + 8, 44, lights, weather));
 		add(arrows = new FlxGroup());
 		add(fx = new FlxGroup());
-		
+
 		add(sack = new Coinsack(270, 2));
-		
+
 		add(fog = new Fog(weather));
-		
+
 		add(noise = new FlxSprite(0, 0));
 		noise.scrollFactor.x = noise.scrollFactor.y = 0;
 		noise.makeGraphic(FlxG.width, FlxG.height, 0xFFFF00FF);
 		noise.pixels.noise(0, 0, 255, 7, true);
 		noise.alpha = 0.015;
-		
+
 		/*
 		 * TODO LEVEL BUILDING
-		 * 
+		 *
 		 * SUGGESTION: BRUTE FORCE THIS
-		 * 
+		 *
 		// Add backdrop objects
 		var o:Xml;
 		if (backdrop != null)
@@ -424,27 +426,27 @@ class PlayState extends FlxState
 			}
 		}
 		// Add ground tiles*/
-		
+
 	}
-	
+
 	/*
 	public function buildObjects(nodes:XMLList, groups:FlxGroup):Void
 	{
-		
+
 	}
 	*/
-	
+
 	//=== GAME LOGIC ===//
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// Collisions
-		
+
 		if (restoreProgress != "")
 		{
 			setProgress(restoreProgress);
 			restoreProgress = null;
 		}
-		
+
 		FlxG.collide(level, coins);
         FlxG.collide(level, trolls);
         FlxG.collide(level, trollsNoCollide);
@@ -471,7 +473,7 @@ class PlayState extends FlxState
 		}
 		// Update weather
 		weather.update();
-		
+
 		// Gamestate
 		if (timeToNextPhase <= 0)
 		{
@@ -483,29 +485,29 @@ class PlayState extends FlxState
 		}
 		kingdomRight = Math.max(GAME_WIDTH / 2 + MIN_KINGDOM_WIDTH / 2, kingdomRight - FlxG.elapsed * 4);
 		kingdomLeft = Math.min(GAME_WIDTH / 2 + MIN_KINGDOM_WIDTH / 2, kingdomLeft + FlxG.elapsed * 4);
-		
+
 		// Spawn bunnies using logistic growth
 		var p:Float = (bunnies.countLiving() + 2) / (MAX_BUNNIES + 2);
 		if (bunnySpawnTimer <= 0)
 		{
 			bunnySpawnTimer = MIN_BUNNY_SPAWNTIME;
 			var probAdd:Float = 0.5 + 2 * p * (1 - p);
-			if (FlxRandom.float() < probAdd)
+			if (random.float() < probAdd)
 			{
-				var rx:Int = Std.int(FlxRandom.float() * grassTiles.length);
+				var rx:Int = Std.int(random.float() * grassTiles.length);
 				bunnies.add(new Bunny(grassTiles[rx] * 32, 0));
 			}
 		}
 		else {
 			bunnySpawnTimer -= FlxG.elapsed;
 		}
-		
+
 		// Spawn beggars
 		if (beggars.countLiving() < minBeggars)
 		{
-			beggars.add(new Citizen((FlxRandom.float() < 0.5) ? 16 : GAME_WIDTH - 16, 0));
+			beggars.add(new Citizen((random.float() < 0.5) ? 16 : GAME_WIDTH - 16, 0));
 		}
-		
+
 		// Spawn trolls
 		updateTrollSpawn();
 		trollSpawnTimer -= FlxG.elapsed;
@@ -514,11 +516,11 @@ class PlayState extends FlxState
 			retreatDelay -= FlxG.elapsed;
 			if (retreatDelay <= 0)
 			{
-				trolls.callAll("retreat");
-				trollsNoCollide.callAll("retreat");
+				trolls.forEach(function(object:Troll){ object.retreat(); });
+				trollsNoCollide.forEach(function(object:Troll){ object.retreat(); });
 			}
 		}
-		
+
 		// Text update
 		if (textTimeout <= 0)
 		{
@@ -537,7 +539,7 @@ class PlayState extends FlxState
 		{
 			centerText.alpha -= 0.05 * FlxG.elapsed;
 		}
-		
+
 		// Camera follow timeout
 		if (cameraTarget.target != player)
 		{
@@ -552,7 +554,7 @@ class PlayState extends FlxState
 				cameraTimeout -= FlxG.elapsed;
 			}
 		}
-		
+
 		// Progress update
 		if (player.x > GAME_WIDTH / 2 && !reachedVillage)
 		{
@@ -563,39 +565,39 @@ class PlayState extends FlxState
 				showText("Throw some coins [DOWN] near them.");
 			}
 		}
-		
+
 		if (recruitedCitizen && !boughtItem && !buyBowAdvice)
 		{
 			buyBowAdvice = true;
 			showText("Buy them bows to defend and hunt for you.");
 			panTo(cast(shops.members[1], FlxSprite), 7.5);
 		}
-		
+
 		if (buyBowAdvice && !buyScytheAdvice && cameraTarget.target == player)
 		{
 			buyScytheAdvice = true;
 			showText("Buy them scythes to build and farm for you.");
 			panTo(cast(shops.members[0], FlxSprite), 7.5);
 		}
-		
+
 		if (boughtItem && !expandedKingdomAdvice && characters.length >= 4 && weather.timeOfDay > 0.3 && weather.timeOfDay < 0.6)
 		{
 			expandedKingdomAdvice = true;
 			showText("Expand your kingdom by building a wall here.");
 			panTo(cast(walls.members[1], FlxSprite), 5.0, -12);
 		}
-		
+
 		this.updateEnvironmentSounds();
-		
+
 		if (gameOver && FlxG.mouse.justPressed)
 		{
-			FlxG.mouse.hide();
+			FlxG.mouse.visible = false;
 			FlxG.switchState(new PlayState(savedProgress));
 		}
-		
-		super.update();
-		
-		if (FlxG.keyboard.justPressed("S"))
+
+		super.update(elapsed);
+
+		if (FlxG.keys.justPressed.S)
 		{
 			if (FlxG.stage.displayState == StageDisplayState.NORMAL)
 			{
@@ -606,23 +608,23 @@ class PlayState extends FlxState
 				FlxG.stage.displayState = StageDisplayState.NORMAL;
 			}
 		}
-		
+
 		/*
 		 * TODO: CHEATS KEY EVENTS
 		*/
 	}
-		
+
 	public function phaseFirst():Void
 	{
 		beggars.add(new Citizen(kingdomRight + 580, 0));
 		beggars.add(new Citizen(kingdomRight + 600, 0));
 	}
-	
+
 	public function phaseBeforeNightOne():Void
 	{
 		showText("Night comes, be careful.");
 	}
-	
+
 	public function phaseNightOne():Void
 	{
 		trollStats(24, 1, 20, 999999, false, 16.0); // Nojump
@@ -638,28 +640,28 @@ class PlayState extends FlxState
 		showText("They will noodle your stuff away.");
 		showText("They will noodle your stuff away.");
 	}
-	
+
 	// These trolls still won't scale your lowest walls
 	public function phaseNightTwo():Void
 	{
 		trollStats(26, 1, 20, 2, false, 12.0); // Jump0
 		spawnTrolls(12);
 	}
-	
+
 	// These WILL scale the lowest walls
 	public function phaseNightThree():Void
 	{
 		trollStats(26, 1, 30, 2, false, 12.0);
 		spawnTrolls(20);
 	}
-	
+
 	// The trolls are a little toughter now.
 	public function phaseNightFour():Void
 	{
 		trollStats(26, 3, 30, 2, false, 12.0);
 		spawnTrolls(24);
 	}
-	
+
 	// They are faster but more chaotic, they might
 	// break your walls, which will kill you in the next wave.
 	public function phaseNightFive():Void
@@ -667,21 +669,21 @@ class PlayState extends FlxState
 		trollStats(35, 2, 38, 2, false, 4.0);
 		spawnTrolls(36);
 	}
-	
+
 	// These trolls will scale the stone walls
 	public function phaseNightSix():Void
 	{
 		trollStats(30, 3, 45, 2, false, 10.0);
 		spawnTrolls(8);
 	}
-	
+
 	// Boss wave trolls
 	public function phaseNightSeven():Void
 	{
 		trollStats(20, 30, 10, 999999, true, 16.0);
 		spawnTrolls(2);
 	}
-	
+
 	// Since the boss probably broke your walls
 	// these trolls jump very high, there is no
 	// disadvantage to not having walls.
@@ -691,14 +693,14 @@ class PlayState extends FlxState
 		trollStats(40, 4, 50, 3, false, 12.0);
 		spawnTrolls(16);
 	}
-	
+
 	// You need the highest walls here
 	public function phaseNightNine():Void
 	{
 		trollStats(30, 4, 45, 4, false, 8.0);
 		spawnTrolls(24);
 	}
-	
+
 	// Kill the player off
 	public function phaseNightTen():Void
 	{
@@ -711,7 +713,7 @@ class PlayState extends FlxState
 		trollStats(26, 1, 30, 2, false, 12.0); // Grunts
 		spawnTrolls(40);
 	}
-	
+
 	public function phaseNightCycle():Void
 	{
 		var difficulty:Float = day.value - 10;
@@ -723,11 +725,11 @@ class PlayState extends FlxState
 			spawnTrolls(Std.int(2 * difficulty));
 		}
 	}
-		
+
 	public function nextPhase():Void
 	{
 		if (phasesPaused) return;
-		
+
 		var currentPhase:Array<Dynamic>;
 		if (phase < PHASES.length)
 		{
@@ -759,7 +761,7 @@ class PlayState extends FlxState
 		{
 			currentPhase[3]();
 		}
-		
+
 		// Play music
 		if (currentPhase[4] != null)
 		{
@@ -771,20 +773,20 @@ class PlayState extends FlxState
 			trace("Playing " + currentPhase[4]);
 		}
 	}
-	
+
 	public function updateEnvironmentSounds():Void
 	{
 		var v:Float;
 		v = 1 - Math.pow(Math.abs(weather.timeOfDay - 0.7) / 0.1, 2);
 		this.cicada.volume = v;
-		
+
 		v = 1 - Math.pow(Math.min(weather.timeOfDay, Math.abs(weather.timeOfDay - 1.0)) / 2, 2);
 		this.owls.volume = v;
-		
+
 		v = 1 - Math.pow(Math.abs(weather.timeOfDay - 0.4) / 0.25, 2);
 		this.birds.volume = v;
 	}
-	
+
 	public function trollStats(speed:Float, health:Float, jumpHeight:Float, jumpiness:Float = 2, big:Bool = false, confusion:Float = 3):Void
 	{
 		trollMaxSpeed = speed;
@@ -794,27 +796,27 @@ class PlayState extends FlxState
 		trollBig = big;
 		trollConfusion = confusion;
 	}
-	
+
 	public function spawnTrolls(amount:Int):Void
 	{
 		if (cheatNoTrolls) return;
-		
+
 		while (amount != 0)
 		{
 			amount -= 2;
-			
+
 			var troll:Troll = cast(trolls.recycle(Troll), Troll);
 			troll.reset(64, groundHeight - 40);
 			trollsToSpawn.push(troll);
-			
+
 			troll = cast(trolls.recycle(Troll), Troll);
 			troll.reset(GAME_WIDTH - 64, groundHeight - 40);
 			trollsToSpawn.push(troll);
-			
+
 			updateTrollSpawn();
 		}
 	}
-	
+
 	public function updateTrollSpawn():Void
 	{
 		if (trollsToSpawn.length > 0 && trollSpawnTimer <= 0)
@@ -824,7 +826,7 @@ class PlayState extends FlxState
 			trollSpawnTimer = MIN_TROLL_SPAWNTIME;
 		}
 	}
-	
+
 	public function daybreak():Void
 	{
 		trollRetreat();
@@ -832,12 +834,12 @@ class PlayState extends FlxState
 		if (castle.stage >= 2)
 		{
 			cast(coins.recycle(Coin), Coin).drop(castle, player);
-		}		
+		}
 		day.addValue(1);
 		showCenterText(utils.toRoman(Std.int(day.value)));
 		saveProgress();
 	}
-	
+
 	public function saveProgress():Void
 	{
 		var numBeggars:Int = beggars.countLiving();
@@ -855,7 +857,7 @@ class PlayState extends FlxState
 		{
 			wallStages.push(cast(walls.members[i], Wall).stage);
 		}
-		
+
 		var s:String = '';
 		s += 'D' + day.value + ' ';
 		s += 'A' + phase + ' ';
@@ -871,11 +873,14 @@ class PlayState extends FlxState
 		trace(s);
 		savedProgress = s;
 	}
-	
+
 	public function setProgress(s:String):Void
 	{
 		progressAll();
-		
+		if(s == null) {
+			return;
+		}
+
 		// Regular expressions
 		var newDay_r:EReg 		= ~/D(\d+)/;
 		var ph_r:EReg			= ~/A(\d+)/;
@@ -888,7 +893,7 @@ class PlayState extends FlxState
 		var castleStage_r:EReg	= ~/C(\d)/;
 		var shopSupply_r:EReg	= ~/S(\d)(\d)/;
 		var gold_r:EReg			= ~/G(\d)/;
-		
+
 		// Matching
 		newDay_r.match(s);
 		ph_r.match(s);
@@ -901,7 +906,7 @@ class PlayState extends FlxState
 		castleStage_r.match(s);
 		shopSupply_r.match(s);
 		gold_r.match(s);
-		
+
 		// Parsing
 		var newDay:Int 		= Std.parseInt(newDay_r.matched(1));
 		var ph:Int			= Std.parseInt(ph_r.matched(1));
@@ -924,16 +929,16 @@ class PlayState extends FlxState
 							Std.parseInt(shopSupply_r.matched(2))
 							];
 		var gold:Int		= Std.parseInt(gold_r.matched(1));
-		
+
 		while (beggars.countLiving() < numBeggars)
 		{
 			beggars.add(new Citizen((kingdomRight + kingdomLeft) / 2, 0));
 		}
-		
+
 		player.x = playerX;
-		
-		characters.callAll("kill");
-		archers.callAll("kill");
+
+		characters.forEach(function(object:FlxBasic){ object.kill(); });
+		archers.forEach(function(object:FlxBasic){ object.kill(); });
 		var c:Citizen;
 		while (numPoor > 0)
 		{
@@ -942,7 +947,7 @@ class PlayState extends FlxState
 			characters.add(c);
 			numPoor--;
 		}
-		
+
 		while (numFarmers > 0)
 		{
 			c = new Citizen((kingdomRight + kingdomLeft) / 2, 0);
@@ -950,7 +955,7 @@ class PlayState extends FlxState
 			characters.add(c);
 			numFarmers--;
 		}
-		
+
 		while (numHunters > 0)
 		{
 			c = new Citizen((kingdomRight + kingdomLeft) / 2, 0);
@@ -958,41 +963,41 @@ class PlayState extends FlxState
 			characters.add(c);
 			numHunters--;
 		}
-		
+
 		for (i in 0...walls.length)
 		{
 			cast(walls.members[i], Wall).buildTo(wallStages[i + 1], true);
 		}
-		
+
 		cast(shops.members[0], Shop).setSupply(shopSupply[0]);
 		cast(shops.members[1], Shop).setSupply(shopSupply[1]);
-		
+
 		castle.morph(castleStage);
-		
+
 		cast(player, Player).changeCoins(gold - cast(player, Player).coins);
-		
+
 		phase = ph - 1;
 		day.setValue(newDay - 1);
 		nextPhase();
-		
-		trolls.callAll("kill");
-		trollsNoCollide.callAll("kill");
-		gibs.callAll("kill");
+
+		trolls.forEach(function(object:FlxBasic){ object.kill(); });
+		trollsNoCollide.forEach(function(object:FlxBasic){ object.kill(); });
+		gibs.forEach(function(object:FlxBasic){ object.kill(); });
 	}
-	
+
 	public function trollRetreat(delay:Float = 10):Void
 	{
 		retreatDelay = delay;
-		
+
 		if (retreatDelay <= 0)
 		{
 			//trollsToSpawn.splice(0);
 			trollsToSpawn.splice(0, trolls.length);
-			trolls.callAll("retreat");
-			trollsNoCollide.callAll("retreat");
+			trolls.forEach(function(object:Troll){ object.retreat(); });
+			trollsNoCollide.forEach(function(object:Troll){ object.retreat(); });
 		}
 	}
-	
+
 	public function pickUpCoin(coin:FlxObject, char:FlxObject):Void
 	{
 		if (Std.is(char, Player))
@@ -1008,7 +1013,7 @@ class PlayState extends FlxState
 			cast(char, Troll).pickup(coin);
 		}
 	}
-	
+
 	public function giveTaxes(char:FlxObject, player:FlxObject):Void
 	{
 		if (char != player)
@@ -1016,13 +1021,13 @@ class PlayState extends FlxState
 			cast(char, Citizen).giveTaxes(cast(player, Player));
 		}
 	}
-	
+
 	public function trollWall(troll:FlxObject, wall:FlxObject):Void
 	{
 		FlxObject.separate(troll, wall);
 		wall.hurt(cast(troll, Troll).big ? 10 : 5);
 	}
-	
+
 	public function trollShot(arrow:FlxObject, troll:Troll):Void
 	{
 		if (troll.alive && arrow.exists)
@@ -1032,7 +1037,7 @@ class PlayState extends FlxState
 			cast(troll, Troll).getShot();
 		}
 	}
-	
+
 	public function bunnyShot(arrow:FlxObject, bunny:FlxObject):Void
 	{
 		if (bunny.alive && arrow.exists)
@@ -1042,7 +1047,7 @@ class PlayState extends FlxState
 			cast(bunny, Bunny).getShot(cast(arrow, Arrow));
 		}
 	}
-	
+
 	public function trollHit(troll:FlxObject, char:FlxObject):Void
 	{
 		if (Std.is(char, Citizen))
@@ -1054,13 +1059,13 @@ class PlayState extends FlxState
 			cast(char, Player).hitByTroll(cast(troll, Troll));
 		}
 	}
-	
+
 	public function crownStolen():Void
 	{
 		gameOver = true;
 		phasesPaused = true;
 		trollRetreat(0);
-		FlxG.mouse.show();
+		FlxG.mouse.visible = true;
 		showText("No crown, no king. Game over.");
 		showText("Click to continue.");
 		//showText("Wait to enter highscore.");
@@ -1070,30 +1075,30 @@ class PlayState extends FlxState
 		// No highscores because Haxe.
 		FlxG.cameras.fade(0, 20, false, endGame);
 	}
-	
+
 	public function endGame():Void
 	{
 		FlxG.switchState(new GameOverState(Std.int(day.value - 1)));
 	}
-	
+
 	//=== RENDERING ===//
 	override public function draw():Void
 	{
 		darkness.dirty = true;
 		darkness.pixels.fillRect(new Rectangle(0, 0, darkness.width, darkness.height), weather.darknessColor);
-		
+
 		super.draw();
 		#if flash
 		weather.ambientTransform.applyFilter(FlxG.camera.buffer);
 		#end
 	}
-	
+
 	public function showCoins():Void
 	{
 		var c:Int = cast(player, Player).coins;
 		sack.show(c);
 	}
-	
+
 	public function showText(t:String = null):Void
 	{
 		if (t != null)
@@ -1107,14 +1112,14 @@ class PlayState extends FlxState
 			textTimeout = Math.max(TEXT_MIN_TIME, TEXT_READ_SPEED * text.text.length);
 		}
 	}
-	
+
 	public function showCenterText(t:String):Void
 	{
 		centerText.text = t;
 		centerText.visible = true;
 		centerText.alpha = 0.999;
 	}
-	
+
 	public function panTo(o:FlxSprite, duration:Float = 8.0, lead:Float = 0):Void
 	{
 		cameraTimeout = duration;

@@ -1,12 +1,12 @@
 package ;
 
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import flash.geom.Point;
 
 import flixel.effects.particles.FlxParticle;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.FlxSprite;
 import flixel.effects.FlxFlicker;
 
@@ -17,16 +17,17 @@ class Coin extends FlxParticle
 	public var owner:FlxObject;
 	public var justThrown:Bool;
 	public var called:Bool;
-	
-	public function new() 
+	private var random:FlxRandom = new FlxRandom();
+
+	public function new()
 	{
 		owner = null;
 		justThrown = false;
 		called = false;
-		
+
 		super();
-		
-		loadGraphic("assets/gfx/coin.png", true, false, 10, 10);
+
+		loadGraphic("assets/gfx/coin.png", false, 10, 10);
 		maxVelocity.x = 20;
 		maxVelocity.y = 275;
 		acceleration.y = 900;
@@ -34,19 +35,19 @@ class Coin extends FlxParticle
 		animation.play("spin");
 		elasticity = 0.5;
 	}
-	
+
 	public function drop(from:FlxSprite, owner:FlxObject = null, far:Bool = false):Coin
 	{
 		reset(from.x + from.width / 2 - 5, Math.max(40, from.y - 10));
 		lifespan = TOTAL_LIFESPAN;
 		if (far)
 		{
-			velocity.x = FlxRandom.float() * 140 - 70;
+			velocity.x = random.float() * 140 - 70;
 			velocity.y = -180;
 		}
 		else
 		{
-			velocity.x = FlxRandom.float() * 60 - 30;
+			velocity.x = random.float() * 60 - 30;
 			velocity.y = -180;
 		}
 		called = false;
@@ -57,8 +58,8 @@ class Coin extends FlxParticle
 		}
 		return this;
 	}
-	
-	override public function update():Void
+
+	override public function update(elapsed:Float):Void
 	{
 		if (!called && lifespan <= TOTAL_LIFESPAN - OWNER_LIFESPAN / 2)
 		{
@@ -77,6 +78,6 @@ class Coin extends FlxParticle
 			FlxFlicker.flicker(this);
 			owner = null;
 		}
-		super.update();
+		super.update(elapsed);
 	}
 }

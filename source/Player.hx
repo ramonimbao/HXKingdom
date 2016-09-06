@@ -7,39 +7,39 @@ import flixel.FlxG;
 import flixel.FlxCamera;
 import flixel.group.FlxGroup;
 import flixel.FlxObject;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
 
 class Player extends FlxSprite
 {
 	public static var pickupSound:FlxSound;
-	
+
 	public static inline var BASE_SKIN:UInt = 0xFFEDBEBF;
 	public static inline var BASE_DARK:UInt = 0xFFBD9898;
 	public static inline var BASE_EYES:UInt = 0xFFA18383;
-	
+
 	public static inline var MAX_SPEED:Float = 80;
 	public static inline var MIN_SPEED:Float = 25;
 	public static inline var MAX_FOOD_BONUS:Float = 50;
 	public static inline var MAX_FOOD:Float = 100;
 	public static inline var HIT_RATE:Float = 0.2;
 	public static inline var SELECT_DISTANCE:Float = 10;
-	
+
 	private var playstate:PlayState;
-	
+
 	private var selectedBuilding:FlxSprite;
 	private var floatCoin:CoinFloat;
 	private var lastMoved:Float;
 	public var food:Float;
-	
+
 	public var hasCrown:Bool;
 	public var lastTrollHit:Float;
 	public var coins:Int;
-	
-	private var utils:Utils;
-	
 
-	public function new(X:Float, Y:Float) 
+	private var utils:Utils = new Utils();
+
+
+	public function new(X:Float, Y:Float)
 	{
 		selectedBuilding = null;
 		floatCoin = null;
@@ -48,21 +48,21 @@ class Player extends FlxSprite
 		hasCrown = true;
 		lastTrollHit = 0;
 		coins = 7;
-		
+
 		super(X, Y);
 		y = 100;
-		
-		loadGraphic("assets/gfx/king.png", true, true, 64, 64);
+
+		loadGraphic("assets/gfx/king.png", true, 64, 64);
 		width = 20;
 		height = 32;
 		offset.x = 22;
 		offset.y = 32;
-		
+
 		maxVelocity.x = MAX_SPEED;
 		drag.x = maxVelocity.x * 5;
-		
+
 		playstate = cast(FlxG.state, PlayState);
-		
+
 		animation.add("walk_slow", [0, 1, 2, 3, 4, 5, 6, 7], 10, true);
 		animation.add("walk_fast", [0, 1, 2, 3, 4, 5, 6, 7], 15, true);
 		animation.add("stand", [8], 10, true);
@@ -70,16 +70,16 @@ class Player extends FlxSprite
 		animation.add("nocrown", [11], 10, true);
 		animation.play("stand");
 		playstate.player = this;
-		
+
 		var d:Float = Math.random() * 20;
 		var skin:UInt = utils.HSVtoRGB(d, 0.19 + (d / 100), 0.97 - (d / 33));
 		utils.replaceColor(pixels, BASE_SKIN, skin);
 		utils.replaceColor(pixels, BASE_DARK, utils.interpolateColor(skin, 0xFF000000, 0.2));
 		utils.replaceColor(pixels, BASE_EYES, utils.interpolateColor(skin, 0xFF000000, 0.5));
-		
+
 		pickupSound = FlxG.sound.load("PickupSound");
 	}
-	
+
 	public function changeCoins(amt:Int):Void
 	{
 		if (amt > 0)
@@ -90,14 +90,14 @@ class Player extends FlxSprite
 		coins += amt;
 		playstate.showCoins();
 	}
-	
+
 	public function hitByTroll(troll:Troll):Void
 	{
 		if (troll.hasCoin) return;
-		
+
 		if (lastTrollHit < HIT_RATE) return;
 		lastTrollHit = 0;
-		
+
 		// If the player has coins, lose one and return.
 		if (coins > 0)
 		{
@@ -109,7 +109,7 @@ class Player extends FlxSprite
 			FlxG.cameras.shake();
 			return;
 		}
-		
+
 		if (hasCrown)
 		{
 			FlxG.cameras.flash(0xFFFFFFFF, 0.1);
@@ -118,7 +118,7 @@ class Player extends FlxSprite
 			playstate.crownStolen();
 		}
 	}
-	
+
 	public function lostCrown(troll:FlxObject):Void
 	{
 		hasCrown = false;
@@ -127,7 +127,7 @@ class Player extends FlxSprite
 		FlxG.sound.play("StolenSound").proximity(x, y, this, FlxG.width);
 		utils.explode(this, playstate.gibs);
 	}
-	
+
 	public function pickup(coin:FlxObject):Void
 	{
 		if (!coin.alive) return;
@@ -137,15 +137,15 @@ class Player extends FlxSprite
 		c.kill();
 		changeCoins(1);
 	}
-	
-	override public function update():Void
+
+	override public function update(elapsed:Float):Void
 	{
 		lastTrollHit += FlxG.elapsed;
-		
+
 		// Check for movement input
 		acceleration.x = 0;
 		if (!hasCrown) return;
-		
+
 		if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.RIGHT)
 		{
 			lastMoved = 0;
@@ -171,7 +171,7 @@ class Player extends FlxSprite
 			else
 			{
 				animation.play("walk_slow");
-			}	
+			}
 		}
 		else if (FlxG.keys.pressed.RIGHT)
 		{
@@ -213,8 +213,8 @@ class Player extends FlxSprite
 		{
 			velocity.x *= 10;
 		}
-		
-		if (FlxG.keyboard.justPressed("DOWN"))
+
+		if (FlxG.keys.justPressed.DOWN)
 		{
 			if (coins <= 0)
 			{
@@ -252,8 +252,8 @@ class Player extends FlxSprite
 				}
 			}
 		}
-		super.update();
-		
+		super.update(elapsed);
+
 		//Find selected shop/wall
 		if (selectedBuilding != null)
 		{
@@ -268,7 +268,7 @@ class Player extends FlxSprite
 			checkSelectable(playstate.shops);
 			checkSelectable(playstate.walls);
 		}
-		
+
 		// CAP WALKING AT LEVEL ENDS
 		if (x < 0)
 		{
@@ -279,7 +279,7 @@ class Player extends FlxSprite
 			velocity.x = Math.min(velocity.x, 0);
 		}
 	}
-	
+
 	private function checkSelectable(group:FlxGroup):Void
 	{
 		for (i in 0...group.length)
@@ -294,7 +294,7 @@ class Player extends FlxSprite
 			}
 		}
 	}
-	
+
 	private function select(building:FlxSprite):Void
 	{
 		selectedBuilding = building;
@@ -305,14 +305,14 @@ class Player extends FlxSprite
 		floatCoin.visible = true;
 		floatCoin.float(selectedBuilding);
 	}
-	
+
 	private function deselect(building:FlxSprite):Void
 	{
 		selectedBuilding.color = 0xFFFFFFFF;
 		selectedBuilding = null;
 		floatCoin.visible = false;
 	}
-	
+
 	private function giveCoin(building:FlxSprite):Void
 	{
 		cast(building, Buildable).build();

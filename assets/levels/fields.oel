@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><level backdropCloseImg="'assets/gfx/skyline_trees.png'" backdropFarImg="'assets/gfx/skyline_hills.png'" waterHeight="152">
+<?xml version="1.0" ?><level backdropCloseImg="assets/gfx/skyline_trees.png" backdropFarImg="assets/gfx/skyline_hills.png" waterHeight="152">
   <width>3840</width>
   <height>192</height>
   <backdrop>

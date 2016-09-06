@@ -1,12 +1,12 @@
 package ;
 
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import flash.geom.Point;
 
 import flixel.FlxSprite;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.FlxCamera;
 
 class Troll extends FlxSprite
@@ -26,10 +26,11 @@ class Troll extends FlxSprite
 	public var maxHeightReached:Float;
 	public var jumpCooldown:Float;
 	public var confuseCooldown:Float;
-	
+
 	private var playstate:PlayState;
-	private var utils:Utils;
-	
+	private var utils:Utils = new Utils();
+	private var random:FlxRandom = new FlxRandom();
+
 	public function new()
 	{
 		t = 0;
@@ -47,16 +48,16 @@ class Troll extends FlxSprite
 		maxHeightReached = 0;
 		jumpCooldown = 0;
 		confuseCooldown = 0;
-		
+
 		super(0, 0);
 		maxVelocity.y = 275;
 		maxVelocity.x = 60;
 		acceleration.y = 900;
 		loadAnims();
-		
+
 		playstate = cast(FlxG.state, PlayState);
 	}
-	
+
 	override public function reset(X:Float, Y:Float):Void
 	{
 		retreating = false;
@@ -79,17 +80,17 @@ class Troll extends FlxSprite
 		confusion = playstate.trollConfusion;
 		confuseCooldown = confusion + Math.random() * 2 * confusion;
 		t = 1;
-		
+
 		if (playstate.trollsNoCollide.remove(this) != null)
 		{
 			playstate.trolls.add(this);
 		}
 	}
-	
+
 	private function loadAnims():Void {
 		if (big)
 		{
-			loadGraphic("assets/gfx/trollbig.png", true, true, 64, 64);
+			loadGraphic("assets/gfx/trollbig.png", true, 64, 64);
 			offset.x = 24;
 			offset.y = 24;
 			width = 16;
@@ -100,24 +101,24 @@ class Troll extends FlxSprite
 		}
 		else
 		{
-			loadGraphic("assets/gfx/troll.png", true, true, 32, 32);
+			loadGraphic("assets/gfx/troll.png", true, 32, 32);
 			offset.x = 12;
 			offset.y = 12;
 			width = 8;
 			height = 20;
-			animation.add("walk", [0, 1, 2, 3, 4, 5, 6, 7, 8], Std.int(10+FlxRandom.float()*5), true);
-			animation.add("walk_crown", [9, 10, 11, 12, 13, 14, 15, 16, 17], Std.int(10 + FlxRandom.float() * 5), true);
-			animation.add("walk_coin", [18, 19, 20, 21, 22, 23, 24, 25, 26], Std.int(10 + FlxRandom.float() * 5), true);
+			animation.add("walk", [0, 1, 2, 3, 4, 5, 6, 7, 8], Std.int(10+random.float()*5), true);
+			animation.add("walk_crown", [9, 10, 11, 12, 13, 14, 15, 16, 17], Std.int(10 + random.float() * 5), true);
+			animation.add("walk_coin", [18, 19, 20, 21, 22, 23, 24, 25, 26], Std.int(10 + random.float() * 5), true);
 			animation.add("stand", [0], 10, true);
 		}
 	}
-	
+
 	public function getsCoin():Void
 	{
 		hasCoin = true;
 		retreat();
 	}
-	
+
 	public function pickup(coin:FlxObject):Void
 	{
 		if (!hasCoin && coin.alive && !retreating && !big)
@@ -127,14 +128,14 @@ class Troll extends FlxSprite
 			retreat();
 		}
 	}
-	
+
 	public function stealCrown():Void
 	{
 		hasCrown = true;
 		playstate.panTo(this, 20);
 		retreat();
 	}
-	
+
 	public function getShot():Void
 	{
 		if (hasCrown) return;
@@ -152,14 +153,14 @@ class Troll extends FlxSprite
 			kill();
 		}
 	}
-	
+
 	override public function kill():Void
 	{
 		playstate.trollsNoCollide.remove(this);
 		playstate.trolls.add(this);
 		super.kill();
 	}
-	
+
 	public function retreat():Void
 	{
 		retreating = true;
@@ -168,7 +169,7 @@ class Troll extends FlxSprite
 		playstate.trolls.remove(this);
 		playstate.trollsNoCollide.add(this);
 	}
-	
+
 	public function go():Void
 	{
 		wait = false;
@@ -179,8 +180,8 @@ class Troll extends FlxSprite
 			playstate.trollsNoCollide.add(this);
 		}
 	}
-	
-	override public function update():Void
+
+	override public function update(elapsed:Float):Void
 	{
 		if (wait) {
 			acceleration.x = 0;
@@ -205,7 +206,7 @@ class Troll extends FlxSprite
 			}
 			t = 0;
 		}
-		
+
 		// I don't know why I need this, but apparently trolls can fall off the world.
 		if (x <= 24 || x + width >= FlxG.worldBounds.width - 24)
 		{
@@ -220,9 +221,9 @@ class Troll extends FlxSprite
 			trace("Wait: " + wait);
 			kill();
 		}
-		
+
 		facing = (goal > x) ? FlxObject.RIGHT : FlxObject.LEFT;
-		
+
 		if ((touching & FlxObject.FLOOR) != 0)
 		{
 			maxVelocity.x = maxSpeed;
@@ -245,7 +246,7 @@ class Troll extends FlxSprite
 			else if (hasCoin)
 				animation.play("walk_coin");
 			else
-				animation.play("walk");	
+				animation.play("walk");
 			// Jump
 			if (jumpCooldown < 0)
 			{
@@ -266,10 +267,10 @@ class Troll extends FlxSprite
 				else
 					acceleration.x = maxVelocity.x;
 			}
-			
-			super.update();
+
+			super.update(elapsed);
 		}
 	}
-	
-	
+
+
 }

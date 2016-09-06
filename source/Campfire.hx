@@ -9,12 +9,12 @@ class Campfire extends Light
 	public function new(X:Float, Y:Float)
 	{
 		Y -= 12;
-		
+
 		super(X, Y);
-		
+
 		offset.x = 16;
 		offset.y = 52;
-		loadGraphic("assets/gfx/campfire.png", true, false, 32, 64);
+		loadGraphic("assets/gfx/campfire.png", false, 32, 64);
 		beam.loadGraphic("assets/gfx/light_large.png");
 		reflected.loadGraphic("assets/gfx/light_reflect_wide.png");
 		reflected.color = 0xFFFC8F53;
@@ -23,5 +23,5 @@ class Campfire extends Light
 		animation.play("on");
 		setLight();
 	}
-	
+
 }

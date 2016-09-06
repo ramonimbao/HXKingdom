@@ -6,7 +6,7 @@ import com.quasimondo.geom.ColorMatrix;
 
 /**
  * ...
- * @author 
+ * @author
  */
 class Weather
 {
@@ -23,34 +23,34 @@ class Weather
 	public var rain:Float			= 0.5;
 	public var timeOfDay:Float		= 0.5;
 	public var sunTint:UInt			= 0xFFFFFF;
-	
+
 	public var ambientTransform:ColorMatrix;
-	
+
 	public var t:Float			= 0;
 	public var changed:Float	= 0;
 	public var progress:Float	= 0;
 	public var ambientAmount:Float = 0;
-	
+
 	public var tweenStart:Float 		= 0.0;
 	public var tweenDuration:Float		= 0.0;
 	public var previousState:Dynamic;
 	public var targetState:Dynamic;
-	
-	public static var weatherPresets:WeatherPresets;
-	public static var utils:Utils;
 
-	public function new() 
+	public static var weatherPresets:WeatherPresets;
+	public static var utils:Utils = new Utils();
+
+	public function new()
 	{
 		ambientTransform = new ColorMatrix();
-		
+
 		weatherPresets = new WeatherPresets();
-		
+
 		previousState = weatherPresets.SUNNY;
 		targetState = weatherPresets.SUNNY;
-		
+
 		setVariables(weatherPresets.SUNNY);
 	}
-	
+
 	public function update():Void
 	{
 		t += FlxG.elapsed;
@@ -59,7 +59,7 @@ class Weather
 			changed = t;
 		}
 	}
-	
+
 	public function tweenTo(state:Dynamic, d:Float = 30):Void
 	{
 		targetState = state;
@@ -74,7 +74,7 @@ class Weather
 			tweenStart = d;
 		}
 	}
-	
+
 	public function updateTween():Void
 	{
 		if (targetState == previousState) return;
@@ -87,14 +87,14 @@ class Weather
 		}
 		setVariables(targetState, previousState, progress);
 	}
-	
+
 	private function setVariables(target:WPNode, previous:WPNode = null, f:Float = 1):Void
 	{
 		if (previous == null)
 		{
 			previous = target;
 		}
-		
+
 		var fi:Float = 1 - f;
 		// Loop through variables and tween them
 		for (v in 0...target.arr.length)
@@ -146,16 +146,16 @@ class Weather
 				//this.
 			}
 		}
-		
+
 		// Set the other vars
 		ambientTransform.reset();
-		
+
 		ambientTransform.colorize(ambient, ambientAmount);
 		ambientTransform.adjustContrast(contrast);
 		ambientTransform.adjustSaturation(saturation);
-		
+
 		// Set opacity of the darknessColor to darkness.
 		darknessColor = (darknessColor * 0x00FFFFFF) | (cast(0xFF * darkness, UInt) << 24);
 	}
-	
+
 }
